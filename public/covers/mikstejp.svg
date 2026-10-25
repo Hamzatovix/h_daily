@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1600" viewBox="0 0 600 800" aria-hidden="true"><defs>
+<filter id="r9104" x="-5%" y="-5%" width="110%" height="110%">
+  <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" seed="71" result="t"/>
+  <feDisplacementMap in="SourceGraphic" in2="t" scale="5" xChannelSelector="R" yChannelSelector="G" result="d"/>
+  <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="78" result="n"/>
+  <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -8 0 0 0 6.9" result="m"/>
+  <feComposite in="d" in2="m" operator="in"/>
+</filter>
+<filter id="g9104" x="0" y="0" width="100%" height="100%">
+  <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="3" seed="74"/>
+  <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.6 1.0"/>
+</filter>
+<pattern id="h9104a" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="4.5" cy="4.5" r="1.4" fill="#111111"/></pattern>
+<pattern id="h9104b" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="4.5" cy="4.5" r="2.4" fill="#111111"/></pattern>
+<pattern id="h9104c" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="4.5" cy="4.5" r="3.4" fill="#111111"/></pattern>
+</defs><rect width="600" height="800" fill="#F4F2EC"/><defs><mask id="k9104"><rect width="600" height="800" fill="#fff"/><g transform="rotate(-9 300 360)"><rect x="190" y="330" width="220" height="84" fill="#000"/></g></mask></defs><g filter="url(#r9104)" style="mix-blend-mode:multiply"><g transform="rotate(-9 300 360)"><rect x="114" y="242" width="372" height="150" fill="#6B2C91" mask="url(#k9104)"/></g><path d="M 268 470 C 250 560, 120 560, 140 640 S 330 700, 300 610 S 420 560, 470 650 S 420 760, 520 770" fill="none" stroke="#6B2C91" stroke-width="14" stroke-linecap="round"/></g><g filter="url(#r9104)" transform="translate(3,-2)" style="mix-blend-mode:multiply"><g transform="rotate(-9 300 360)"><path d="M 90 220 h 420 v 268 h -420 Z M 114 242 v 150 h 372 v -150 Z" fill="#111111" fill-rule="evenodd"/><path d="M 114 392 h 372 v 74 h -372 Z" fill="#111111"/><rect x="190" y="330" width="220" height="84" fill="#F4F2EC"/><circle cx="245" cy="372" r="30" fill="#111111"/><circle cx="355" cy="372" r="30" fill="#111111"/><rect x="242" y="358" width="6" height="28" fill="#F4F2EC" transform="rotate(0 245 372)"/><rect x="242" y="358" width="6" height="28" fill="#F4F2EC" transform="rotate(60 245 372)"/><rect x="242" y="358" width="6" height="28" fill="#F4F2EC" transform="rotate(120 245 372)"/><rect x="352" y="358" width="6" height="28" fill="#F4F2EC" transform="rotate(0 355 372)"/><rect x="352" y="358" width="6" height="28" fill="#F4F2EC" transform="rotate(60 355 372)"/><rect x="352" y="358" width="6" height="28" fill="#F4F2EC" transform="rotate(120 355 372)"/><rect x="114" y="260" width="140" height="7" fill="#111111"/><rect x="114" y="282" width="96" height="7" fill="#111111"/><path d="M 190 488 L 210 456 L 390 456 L 410 488 Z" fill="#F4F2EC"/></g><ellipse cx="300" cy="530" rx="230" ry="18" fill="url(#h9104b)"/></g><rect width="600" height="800" filter="url(#g9104)" opacity="0.16" style="mix-blend-mode:multiply"/></svg>

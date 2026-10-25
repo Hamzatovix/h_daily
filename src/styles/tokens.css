@@ -1,0 +1,112 @@
+/* HAMZATOVIC daily — дизайн-токены. Источник: design/tokens.json (брендбук). Не правьте значения здесь без правки брендбука. */
+/* Тема: day по умолчанию; night — по системной настройке или переключателю (data-theme на <html>). */
+/* Цвет тома: data-tome="plum" на <html> (или на корне тома). На странице только tome, ink, paper, flap. */
+
+:root {
+  --paper: #FFFFFF;
+  --ink: #000000;
+  --flap: #F1F1EE;
+  --rule: #DADBDD;
+  --tome-cobalt: #1E3FD8;
+  --tome-carmine: #D1293D;
+  --tome-emerald: #00754E;
+  --tome-plum: #6B2C91;
+  --tome-minium: #C2410C;
+  --tome-petrol: #0B6E79;
+  --on-tome: #FFFFFF;
+  --print-paper: #F4F2EC;
+  --print-ink: #111111;
+  --tome: var(--tome-cobalt);
+  color-scheme: light;
+
+  --font-display: "Dela Gothic One", "Arial Black", sans-serif;
+  --font-text: "Literata", Georgia, serif;
+  --fs-cover-title: 149px;
+  --lh-cover-title: 0.86;
+  --fs-article-title: 95px;
+  --lh-article-title: 1.0;
+  --fs-section: 61px;
+  --lh-section: 1.0;
+  --fs-subhead: 39px;
+  --lh-subhead: 1.1;
+  --fs-margin-quote: 27px;
+  --lh-margin-quote: 1.22;
+  --fs-flap-label: 20px;
+  --lh-flap-label: 1.2;
+  --fs-lede: 25px;
+  --lh-lede: 38px;
+  --fs-body: 20px;
+  --lh-body: 34px;
+  --fs-body-mobile: 18px;
+  --lh-body-mobile: 30px;
+  --fs-card-title: 24px;
+  --lh-card-title: 1.25;
+  --fs-flap-text: 17px;
+  --lh-flap-text: 27px;
+  --fs-note: 16px;
+  --lh-note: 25px;
+  --fs-meta: 15px;
+  --lh-meta: 1.5;
+  --fs-article-title-mobile: 38px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-96: 96px;
+  --space-128: 128px;
+  --radius-none: 0px;
+  --radius-dot: 50%;
+  --frame-desktop: 22px;
+  --frame-mobile: 8px;
+  --page-margin-mobile: 20px;
+  --text-measure: 640px;
+  --hairline: 2px;
+  --grid-columns: 12;
+}
+
+:root[data-tome="cobalt"] { --tome: var(--tome-cobalt); }
+:root[data-tome="carmine"] { --tome: var(--tome-carmine); }
+:root[data-tome="emerald"] { --tome: var(--tome-emerald); }
+:root[data-tome="plum"] { --tome: var(--tome-plum); }
+:root[data-tome="minium"] { --tome: var(--tome-minium); }
+:root[data-tome="petrol"] { --tome: var(--tome-petrol); }
+
+:root[data-theme="night"] {
+  --paper: #17140F;
+  --ink: #E8E1D2;
+  --flap: #221E18;
+  --rule: #3A342C;
+  --tome-cobalt: #8FA4FF;
+  --tome-carmine: #FF8A8F;
+  --tome-emerald: #5FD3A0;
+  --tome-plum: #C99BEA;
+  --tome-minium: #FF9A62;
+  --tome-petrol: #5CC6D2;
+  --on-tome: #17140F;
+  --print-paper: #F4F2EC;
+  --print-ink: #111111;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="day"]) {
+    --paper: #17140F;
+    --ink: #E8E1D2;
+    --flap: #221E18;
+    --rule: #3A342C;
+    --tome-cobalt: #8FA4FF;
+    --tome-carmine: #FF8A8F;
+    --tome-emerald: #5FD3A0;
+    --tome-plum: #C99BEA;
+    --tome-minium: #FF9A62;
+    --tome-petrol: #5CC6D2;
+    --on-tome: #17140F;
+    --print-paper: #F4F2EC;
+    --print-ink: #111111;
+    color-scheme: dark;
+  }
+}
+
+/* Иллюстрации печатаются красками tome, print-ink, print-paper и ночью НЕ меняются: print-* одинаковы в обеих темах, а обложки отдаются готовыми файлами. */

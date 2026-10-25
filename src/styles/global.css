@@ -1,0 +1,61 @@
+/* Шрифты с нашего сервера: только кириллица и латиница. */
+@import '@fontsource/dela-gothic-one/cyrillic-400.css';
+@import '@fontsource/dela-gothic-one/latin-400.css';
+@import '@fontsource/literata/cyrillic-400.css';
+@import '@fontsource/literata/latin-400.css';
+@import '@fontsource/literata/cyrillic-400-italic.css';
+@import '@fontsource/literata/latin-400-italic.css';
+@import '@fontsource/literata/cyrillic-700.css';
+@import '@fontsource/literata/latin-700.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--tome);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: var(--frame-desktop);
+  background: var(--paper);
+  background-clip: content-box;
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+}
+
+/* Рамка тома: по краям экрана, поверх страницы. На шагах 5–6 станет прогрессом чтения. */
+.tome-frame {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  border: var(--frame-desktop) solid var(--tome);
+  border-radius: var(--radius-none);
+  pointer-events: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--tome);
+  outline-offset: 3px;
+}
+
+/* Телефон: до 767px (docs/components.md). */
+@media (max-width: 767px) {
+  body {
+    padding: var(--frame-mobile);
+    font-size: var(--fs-body-mobile);
+    line-height: var(--lh-body-mobile);
+  }
+
+  .tome-frame {
+    border-width: var(--frame-mobile);
+  }
+}

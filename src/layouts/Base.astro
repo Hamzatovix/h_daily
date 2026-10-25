@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import '../styles/tokens.css';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Номер тома. Без него — текущий том (последний опубликованный). */
+  tome?: number;
+}
+
+const { title, description, tome: tomeNumber } = Astro.props;
+
+const tomes = (await getCollection('tomes', ({ data }) => data.status === 'published'))
+  .sort((a, b) => b.data.number - a.data.number);
+const tome = tomeNumber === undefined
+  ? tomes[0]
+  : tomes.find(({ data }) => data.number === tomeNumber);
+
+if (!tome) {
+  throw new Error(`Том ${tomeNumber ?? '(текущий)'} не найден среди опубликованных в src/content/tomes/`);
+}
+
+const siteName = 'HAMZATOVIC daily';
+const pageTitle = title ? `${title} — ${siteName}` : siteName;
+const pageDescription = description ?? tome.data.lede;
+---
+
+<!doctype html>
+<html lang="ru" data-tome={tome.data.color}>
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>
+      // Тема до первой отрисовки, чтобы ночью не было белой вспышки.
+      // Пусто — следуем prefers-color-scheme (правило в tokens.css).
+      try {
+        var theme = localStorage.getItem('theme');
+        if (theme === 'day' || theme === 'night') document.documentElement.dataset.theme = theme;
+      } catch (e) {}
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="icon" type="image/svg+xml" href="/brand/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <div class="tome-frame" aria-hidden="true"></div>
+    <slot />
+  </body>
+</html>
