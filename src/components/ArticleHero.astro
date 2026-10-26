@@ -20,7 +20,8 @@ const coverSrc = coverSvg ?? cover;
     {coverSrc && <img src={coverSrc} alt={coverAlt} width="640" height="853" />}
   </div>
   <div class="article-hero__content">
-    <p class="article-hero__meta">{genre}. Том {tome}, материал {position} из {total}</p>
+    <p class="article-hero__meta article-hero__meta--desktop">{genre}. Том {tome}, материал {position} из {total}</p>
+    <p class="article-hero__meta article-hero__meta--mobile">{genre} · материал {position} из {total}</p>
     <h1 class="article-hero__title">{title}</h1>
     <p class="article-hero__subtitle">{subtitle}</p>
     <div class="article-hero__byline">
@@ -113,5 +114,52 @@ const coverSrc = coverSvg ?? cover;
 
   .article-hero__author {
     font-weight: 700;
+  }
+
+  .article-hero__meta--mobile {
+    display: none;
+  }
+
+  /* Телефон и планшет: обложка во всю ширину сверху, обрезана по высоте. */
+  @media (max-width: 1024px) {
+    .article-hero {
+      display: block;
+      padding: 0 var(--page-margin-mobile);
+    }
+
+    .article-hero__cover {
+      margin: 0 calc(var(--page-margin-mobile) * -1);
+      aspect-ratio: auto;
+      height: 300px;
+    }
+
+    .article-hero__content {
+      padding-top: var(--space-24);
+    }
+
+    .article-hero__meta--desktop {
+      display: none;
+    }
+
+    .article-hero__meta--mobile {
+      display: block;
+    }
+
+    .article-hero__title {
+      margin-top: var(--space-16);
+      font-size: var(--fs-article-title-mobile);
+      line-height: 1.1;
+      overflow-wrap: break-word;
+    }
+
+    .article-hero__subtitle {
+      margin-top: var(--space-16);
+      font-size: 16px;
+      line-height: 1.4;
+    }
+
+    .article-hero__byline {
+      padding-top: var(--space-16);
+    }
   }
 </style>

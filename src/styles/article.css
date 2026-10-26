@@ -12,8 +12,6 @@
   max-width: var(--text-measure);
   margin: 0;
   font-family: var(--font-text);
-  font-size: var(--fs-body);
-  line-height: var(--lh-body);
   font-variant-numeric: oldstyle-nums;
 }
 
@@ -55,7 +53,17 @@
   line-height: var(--lh-note);
 }
 
+.article-grid > .sidenote summary {
+  list-style: none;
+  cursor: default;
+}
+
+.article-grid > .sidenote summary::-webkit-details-marker {
+  display: none;
+}
+
 .article-grid > .sidenote .sidenote-number {
+  display: inline;
   color: var(--tome);
   font-weight: 700;
   margin-right: var(--space-4);
@@ -92,4 +100,43 @@
   background: var(--tome);
   border-radius: var(--radius-dot);
   vertical-align: middle;
+}
+
+/* Компьютер: сноска на полях держится раскрытой через CSS, без участия JS. */
+@media (min-width: 1025px) {
+  .article-grid > .sidenote .sidenote-text {
+    display: inline !important;
+  }
+}
+
+/* Телефон и планшет: колонка на всю ширину, клапан и сноска сворачиваются, цитата на полях скрыта.
+   docs/components.md → «Телефон», design/screens/06-mobile.jpg */
+@media (max-width: 1024px) {
+  .article-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-24) 0;
+    padding: var(--space-24) var(--page-margin-mobile) 0;
+  }
+
+  .article-grid > p {
+    grid-column: 1;
+    max-width: none;
+    font-size: var(--fs-body-mobile);
+    line-height: var(--lh-body-mobile);
+  }
+
+  .article-grid > .sidenote {
+    grid-column: 1;
+    background: var(--flap);
+    padding: var(--space-16);
+    cursor: pointer;
+  }
+
+  .article-grid > .sidenote[open] {
+    cursor: default;
+  }
+
+  .article-grid > .margin-quote {
+    display: none;
+  }
 }

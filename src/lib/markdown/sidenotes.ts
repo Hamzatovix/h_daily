@@ -2,8 +2,10 @@ import type { Root, Element, ElementContent, RootContent } from 'hast';
 
 /**
  * Превращает стандартные GFM-сноски (`[^1]` → `<sup><a>` + секция `Footnotes` в конце)
- * в сноски на полях: убирает секцию, вставляет `<aside class="sidenote">` сразу после
- * абзаца, в котором встретилась ссылка на неё.
+ * в сноски на полях: убирает секцию, вставляет `<details class="sidenote">` сразу после
+ * абзаца, в котором встретилась ссылка на неё. На телефоне `<details>` даёт раскрытие
+ * по нажатию без JS (docs/components.md → Sidenote); на компьютере CSS держит её открытой.
+ * Ссылка в тексте ведёт на id сноски: браузер сам раскрывает `<details>` по переходу.
  */
 export function rehypeSidenotes() {
   return (tree: Root) => {
@@ -48,7 +50,9 @@ function findFootnoteRefs(node: Element): string[] {
   const refs: string[] = [];
   const walk = (n: ElementContent) => {
     if (n.type === 'element' && n.tagName === 'a' && n.properties?.dataFootnoteRef !== undefined) {
-      refs.push(String(n.properties?.id ?? '').replace('user-content-fnref-', ''));
+      const num = String(n.properties?.id ?? '').replace('user-content-fnref-', '');
+      n.properties.href = `#fn-${num}`;
+      refs.push(num);
     }
     if (n.type === 'element') n.children.forEach(walk);
   };
@@ -59,13 +63,13 @@ function findFootnoteRefs(node: Element): string[] {
 function buildSidenote(num: string, content: ElementContent[]): Element {
   return {
     type: 'element',
-    tagName: 'aside',
-    properties: { className: ['sidenote'], dataSidenote: num, 'aria-label': `Сноска ${num}` },
+    tagName: 'details',
+    properties: { className: ['sidenote'], id: `fn-${num}` },
     children: [
       {
         type: 'element',
-        tagName: 'span',
-        properties: { className: ['sidenote-number'] },
+        tagName: 'summary',
+        properties: { className: ['sidenote-number'], 'aria-label': `Сноска ${num}` },
         children: [{ type: 'text', value: num }],
       },
       {

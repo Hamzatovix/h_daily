@@ -3,14 +3,18 @@
 interface Props {
   tomeNumber: number;
   tomeTitle: string;
+  /** В статье на телефоне слева вместо «Том N» — номер материала («3 из 5»). */
+  mobileLabel?: string;
 }
-const { tomeNumber, tomeTitle } = Astro.props;
+const { tomeNumber, tomeTitle, mobileLabel } = Astro.props;
 ---
 
 <header class="site-header">
-  <a class="site-header__tome" href={`/tom/${tomeNumber}/`}>Том {tomeNumber}. {tomeTitle}</a>
+  <a class="site-header__tome site-header__tome--desktop" href={`/tom/${tomeNumber}/`}>Том {tomeNumber}. {tomeTitle}</a>
+  <a class="site-header__tome site-header__tome--mobile" href={`/tom/${tomeNumber}/`}>{mobileLabel ?? `Том ${tomeNumber}`}</a>
   <a class="site-header__logo" href="/" aria-label="HAMZATOVIC daily — на главную">
-    <img src="/brand/logo-horizontal.svg" alt="HAMZATOVIC daily" height="30" />
+    <img class="site-header__logo-img--desktop" src="/brand/logo-horizontal.svg" alt="HAMZATOVIC daily" height="30" />
+    <img class="site-header__logo-img--mobile" src="/brand/logo-small.svg" alt="HAMZATOVIC daily" height="17" />
   </a>
   <nav class="site-header__nav" aria-label="Разделы">
     <a href="/lenta/">Лента</a>
@@ -44,7 +48,7 @@ const { tomeNumber, tomeTitle } = Astro.props;
     line-height: 0;
   }
 
-  .site-header__logo img {
+  .site-header__logo-img--desktop {
     display: block;
     height: 30px;
     width: auto;
@@ -71,5 +75,50 @@ const { tomeNumber, tomeTitle } = Astro.props;
     border-radius: var(--radius-dot);
     background: linear-gradient(90deg, var(--ink) 50%, transparent 50%);
     cursor: pointer;
+  }
+
+  .site-header__tome--mobile,
+  .site-header__logo-img--mobile {
+    display: none;
+  }
+
+  /* Телефон и планшет: шапка 56px, слева номер материала, логотип мельче, меню — в подвале. */
+  @media (max-width: 1024px) {
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-16);
+      height: 56px;
+      padding: 0 var(--page-margin-mobile);
+    }
+
+    .site-header__tome--desktop,
+    .site-header__logo-img--desktop {
+      display: none;
+    }
+
+    .site-header__tome--mobile {
+      display: block;
+      flex: none;
+      white-space: nowrap;
+    }
+
+    .site-header__logo {
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    .site-header__logo-img--mobile {
+      display: block;
+      max-height: 17px;
+      max-width: 100%;
+      width: auto;
+      height: auto;
+    }
+
+    .site-header__nav a {
+      display: none;
+    }
   }
 </style>

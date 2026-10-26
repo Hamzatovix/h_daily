@@ -77,7 +77,7 @@ for (let i = 0; i < 2; i++) {
 
 <Base title={entry.data.title} description={entry.data.subtitle} tome={entry.data.tome}>
   <TomeFrame slot="frame" readingTime={entry.data.readingTime} />
-  <Header tomeNumber={tome.data.number} tomeTitle={tome.data.title} />
+  <Header tomeNumber={tome.data.number} tomeTitle={tome.data.title} mobileLabel={`${position} из ${total}`} />
   <main>
     <ArticleHero entry={entry} position={position} total={total} />
     <div class="article-grid">

@@ -9,9 +9,17 @@ interface Props {
 }
 const { flap, author } = Astro.props;
 const authorInfo = AUTHORS[author];
+const [firstGroup, ...restGroups] = flap;
 ---
 
-<aside class="flap">
+<details class="flap">
+  <summary class="flap__summary">
+    <span class="flap__summary-text">
+      <strong>{firstGroup.label}</strong>
+      {restGroups.length > 0 && <span class="flap__summary-rest">, {restGroups.map((g) => g.label.toLowerCase()).join(', ')}</span>}
+    </span>
+    <span class="flap__summary-icon" aria-hidden="true" />
+  </summary>
   {
     flap.map((group) => (
       <div class="flap__group">
@@ -37,22 +45,89 @@ const authorInfo = AUTHORS[author];
       {authorInfo.name}. {authorInfo.bio}
     </p>
   </div>
-</aside>
+</details>
 
 <style>
-  .flap {
-    grid-column: 1 / span 3;
-    grid-row: 1 / -1;
-    background: var(--flap);
-    border-right: var(--hairline) dashed var(--ink);
-    padding: var(--space-48) var(--space-32);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-32);
+  .flap summary {
+    list-style: none;
+  }
+
+  .flap summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Компьютер: клапан — колонка сетки, всегда раскрыт, строка-саммари скрыта. */
+  @media (min-width: 1025px) {
+    .flap {
+      grid-column: 1 / span 3;
+      grid-row: 1 / -1;
+      background: var(--flap);
+      border-right: var(--hairline) dashed var(--ink);
+      padding: var(--space-48) var(--space-32);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-32);
+    }
+
+    .flap__summary {
+      display: none;
+    }
+
+    .flap > .flap__group {
+      display: flex !important;
+      flex-direction: column;
+    }
   }
 
   .flap__group--author {
     margin-top: auto;
+  }
+
+  /* Телефон и планшет: клапан свёрнут в строку, раскрывается по нажатию (без JS). */
+  @media (max-width: 1024px) {
+    .flap {
+      background: var(--paper);
+      border: var(--hairline) dashed var(--ink);
+      padding: var(--space-16);
+    }
+
+    .flap__summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-16);
+      cursor: pointer;
+      font-family: var(--font-text);
+      font-size: var(--fs-flap-text);
+    }
+
+    .flap__summary-rest {
+      text-transform: lowercase;
+    }
+
+    .flap__summary-icon {
+      font-family: var(--font-display);
+      font-size: var(--fs-flap-label);
+      flex: none;
+    }
+
+    .flap__summary-icon::before {
+      content: '+';
+    }
+
+    .flap[open] .flap__summary-icon::before {
+      content: '\2212';
+    }
+
+    .flap__group {
+      margin-top: var(--space-24);
+    }
+
+    .flap__group--author {
+      margin-top: var(--space-24);
+      padding-top: var(--space-24);
+      border-top: var(--hairline) solid var(--rule);
+    }
   }
 
   .flap__label {
