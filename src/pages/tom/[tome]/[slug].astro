@@ -36,6 +36,17 @@ if (!tome) throw new Error(`Том ${entry.data.tome} не найден`);
 
 const { Content } = await render(entry);
 
+const coverSrc = entry.data.coverSmall ?? entry.data.cover;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: entry.data.title,
+  description: entry.data.subtitle,
+  author: { '@type': 'Person', name: AUTHORS[entry.data.author].name },
+  ...(tome.data.publishedAt ? { datePublished: tome.data.publishedAt.toISOString() } : {}),
+  ...(coverSrc ? { image: new URL(coverSrc, Astro.site).toString() } : {}),
+};
+
 const upcoming = tomeSiblings.filter((s) => s.data.order > entry.data.order);
 const cards: NextCard[] = [];
 
@@ -75,7 +86,8 @@ for (let i = 0; i < 2; i++) {
 }
 ---
 
-<Base title={entry.data.title} description={entry.data.subtitle} tome={entry.data.tome}>
+<Base title={entry.data.title} description={entry.data.subtitle} tome={entry.data.tome} image={coverSrc ?? undefined} type="article">
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
   <TomeFrame slot="frame" readingTime={entry.data.readingTime} />
   <Header tomeNumber={tome.data.number} tomeTitle={tome.data.title} mobileLabel={`${position} из ${total}`} />
   <main>

@@ -8,9 +8,12 @@ interface Props {
   description?: string;
   /** Номер тома. Без него — текущий том (последний опубликованный). */
   tome?: number;
+  /** Картинка превью для Open Graph / Twitter. На первом этапе — обложка материала. */
+  image?: string;
+  type?: 'website' | 'article';
 }
 
-const { title, description, tome: tomeNumber } = Astro.props;
+const { title, description, tome: tomeNumber, image, type = 'website' } = Astro.props;
 
 const tomes = (await getCollection('tomes', ({ data }) => data.status === 'published'))
   .sort((a, b) => b.data.number - a.data.number);
@@ -25,6 +28,8 @@ if (!tome) {
 const siteName = 'HAMZATOVIC daily';
 const pageTitle = title ? `${title} — ${siteName}` : siteName;
 const pageDescription = description ?? tome.data.lede;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const ogImageUrl = image ? new URL(image, Astro.site).toString() : undefined;
 ---
 
 <!doctype html>
@@ -42,8 +47,23 @@ const pageDescription = description ?? tome.data.lede;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={canonicalUrl} />
     <link rel="icon" type="image/svg+xml" href="/brand/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content={type} />
+    <meta property="og:locale" content="ru_RU" />
+    {ogImageUrl && <meta property="og:image" content={ogImageUrl} />}
+
+    <meta name="twitter:card" content={ogImageUrl ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={pageDescription} />
+    {ogImageUrl && <meta name="twitter:image" content={ogImageUrl} />}
+    <slot name="head" />
   </head>
   <body>
     <slot name="frame">
