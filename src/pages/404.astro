@@ -1,0 +1,51 @@
+---
+// 404. docs/pages.md, design/brandbook/README.md → «контур выпавшей точки — страница 404».
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const tomes = (await getCollection('tomes', ({ data }) => data.status === 'published')).sort(
+  (a, b) => b.data.number - a.data.number,
+);
+const tome = tomes[0];
+if (!tome) throw new Error('Нет ни одного опубликованного тома в src/content/tomes/');
+---
+
+<Base title="Страница не найдена" tome={tome.data.number}>
+  <Header tomeNumber={tome.data.number} tomeTitle={tome.data.title} />
+  <main class="not-found">
+    <svg class="not-found__dot" viewBox="0 0 80 80" aria-hidden="true">
+      <circle cx="40" cy="40" r="28" fill="none" stroke="var(--tome)" stroke-width="2" stroke-dasharray="4 5" />
+    </svg>
+    <p class="not-found__text">Такой страницы нет. <a href="/">Вернуться к тому</a>.</p>
+  </main>
+  <Footer variant="full" />
+</Base>
+
+<style>
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-32);
+    padding: var(--space-128) var(--space-48);
+    text-align: center;
+  }
+
+  .not-found__dot {
+    width: 80px;
+    height: 80px;
+  }
+
+  .not-found__text {
+    margin: 0;
+    font-family: var(--font-text);
+    font-size: var(--fs-lede);
+  }
+
+  .not-found__text a {
+    color: var(--ink);
+  }
+</style>

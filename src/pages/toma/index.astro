@@ -1,0 +1,89 @@
+---
+// Тома: полка крупно и список. docs/pages.md → «Страницы без макета»
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Spine from '../../components/Spine.astro';
+import Footer from '../../components/Footer.astro';
+import '../../styles/home.css';
+
+const tomes = (await getCollection('tomes', ({ data }) => data.status === 'published')).sort(
+  (a, b) => b.data.number - a.data.number,
+);
+const current = tomes[0];
+if (!current) throw new Error('Нет ни одного опубликованного тома в src/content/tomes/');
+
+const allTomes = (await getCollection('tomes', ({ data }) => data.status === 'published')).sort(
+  (a, b) => a.data.number - b.data.number,
+);
+---
+
+<Base title="Тома" tome={current.data.number}>
+  <Header tomeNumber={current.data.number} tomeTitle={current.data.title} />
+  <main>
+    <section class="home-section">
+      <h1 class="home-section__heading">Тома</h1>
+      <p class="home-section__lede">Архив томов. Каждый том стоит корешком своего цвета, по нажатию открывается целиком.</p>
+      <Spine tomes={allTomes} />
+    </section>
+
+    <section class="home-section">
+      <ul class="toma-list">
+        {
+          allTomes.map((tome) => (
+            <li class="toma-list__item" style={`border-color: var(--tome-${tome.data.color})`}>
+              <span class="toma-list__dot" style={`background: var(--tome-${tome.data.color})`} aria-hidden="true" />
+              <div>
+                <a class="toma-list__title" href={`/tom/${tome.data.number}/`}>
+                  Том {tome.data.number}. {tome.data.title}
+                </a>
+                <p class="toma-list__lede">{tome.data.lede}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </main>
+  <Footer variant="full" />
+</Base>
+
+<style>
+  .toma-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+  }
+
+  .toma-list__item {
+    display: flex;
+    gap: var(--space-16);
+    padding-left: var(--space-16);
+    border-left: 4px solid;
+  }
+
+  .toma-list__dot {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    margin-top: 6px;
+    border-radius: var(--radius-dot);
+  }
+
+  .toma-list__title {
+    display: block;
+    font-family: var(--font-text);
+    font-size: var(--fs-card-title);
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .toma-list__lede {
+    margin: var(--space-8) 0 0;
+    max-width: var(--text-measure);
+    font-family: var(--font-text);
+  }
+</style>

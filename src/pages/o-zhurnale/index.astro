@@ -1,0 +1,42 @@
+---
+// О журнале. docs/pages.md → «Страницы без макета». Текст пишет редакция — пока заглушка.
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import '../../styles/home.css';
+
+const tomes = (await getCollection('tomes', ({ data }) => data.status === 'published')).sort(
+  (a, b) => b.data.number - a.data.number,
+);
+const tome = tomes[0];
+if (!tome) throw new Error('Нет ни одного опубликованного тома в src/content/tomes/');
+---
+
+<Base title="О журнале" tome={tome.data.number}>
+  <Header tomeNumber={tome.data.number} tomeTitle={tome.data.title} />
+  <main>
+    <section class="home-section">
+      <h1 class="home-section__heading">О журнале</h1>
+      <div class="about-text">
+        <p class="about-text__todo">TODO: текст от редакции — что за журнал, как устроены тома, кто пишет.</p>
+        <p>Тартт — редакционный псевдоним.</p>
+      </div>
+    </section>
+  </main>
+  <Footer variant="full" />
+</Base>
+
+<style>
+  .about-text {
+    max-width: var(--text-measure);
+    font-family: var(--font-text);
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .about-text__todo {
+    font-style: italic;
+    color: var(--rule);
+  }
+</style>
