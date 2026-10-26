@@ -1,0 +1,45 @@
+---
+// docs/components.md, design/brandbook/README.md → ThemeToggle
+---
+
+<button type="button" class="theme-toggle" aria-label="Ночной режим" aria-pressed="false"></button>
+
+<script>
+  const STORAGE_KEY = 'theme';
+  const root = document.documentElement;
+
+  function isNight(): boolean {
+    if (root.dataset.theme === 'night') return true;
+    if (root.dataset.theme === 'day') return false;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+
+  document.querySelectorAll<HTMLButtonElement>('.theme-toggle').forEach((button) => {
+    button.setAttribute('aria-pressed', String(isNight()));
+
+    button.addEventListener('click', () => {
+      const next = isNight() ? 'day' : 'night';
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem(STORAGE_KEY, next);
+      } catch {
+        // хранилище недоступно — переключаем только на текущую сессию
+      }
+      document.querySelectorAll<HTMLButtonElement>('.theme-toggle').forEach((b) => {
+        b.setAttribute('aria-pressed', String(isNight()));
+      });
+    });
+  });
+</script>
+
+<style>
+  .theme-toggle {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: var(--hairline) solid var(--ink);
+    border-radius: var(--radius-dot);
+    background: linear-gradient(90deg, var(--ink) 50%, transparent 50%);
+    cursor: pointer;
+  }
+</style>

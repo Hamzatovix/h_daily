@@ -1,5 +1,7 @@
 ---
 // docs/components.md, design/brandbook/components/Header.md
+import ThemeToggle from './ThemeToggle.astro';
+
 interface Props {
   tomeNumber: number;
   tomeTitle: string;
@@ -20,7 +22,7 @@ const { tomeNumber, tomeTitle, mobileLabel } = Astro.props;
     <a href="/lenta/">Лента</a>
     <a href="/toma/">Тома</a>
     <a href="/o-zhurnale/">О журнале</a>
-    <button type="button" class="theme-toggle" aria-label="Ночной режим" aria-pressed="false"></button>
+    <ThemeToggle />
   </nav>
 </header>
 
@@ -65,16 +67,6 @@ const { tomeNumber, tomeTitle, mobileLabel } = Astro.props;
   .site-header__nav a {
     color: var(--ink);
     text-decoration: none;
-  }
-
-  .theme-toggle {
-    width: 20px;
-    height: 20px;
-    padding: 0;
-    border: var(--hairline) solid var(--ink);
-    border-radius: var(--radius-dot);
-    background: linear-gradient(90deg, var(--ink) 50%, transparent 50%);
-    cursor: pointer;
   }
 
   .site-header__tome--mobile,
