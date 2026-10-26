@@ -3,6 +3,7 @@
 import { getCollection, render } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import Header from '../../../components/Header.astro';
+import TomeFrame from '../../../components/TomeFrame.astro';
 import ArticleHero from '../../../components/ArticleHero.astro';
 import Flap from '../../../components/Flap.astro';
 import NextInTome, { type NextCard } from '../../../components/NextInTome.astro';
@@ -75,6 +76,7 @@ for (let i = 0; i < 2; i++) {
 ---
 
 <Base title={entry.data.title} description={entry.data.subtitle} tome={entry.data.tome}>
+  <TomeFrame slot="frame" readingTime={entry.data.readingTime} />
   <Header tomeNumber={tome.data.number} tomeTitle={tome.data.title} />
   <main>
     <ArticleHero entry={entry} position={position} total={total} />

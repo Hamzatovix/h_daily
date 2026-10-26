@@ -46,7 +46,9 @@ const pageDescription = description ?? tome.data.lede;
     <meta name="generator" content={Astro.generator} />
   </head>
   <body>
-    <div class="tome-frame" aria-hidden="true"></div>
+    <slot name="frame">
+      <div class="tome-frame" aria-hidden="true"></div>
+    </slot>
     <slot />
   </body>
 </html>

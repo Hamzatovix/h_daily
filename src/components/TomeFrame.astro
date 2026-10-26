@@ -1,0 +1,180 @@
+---
+// docs/components.md → TomeFrame, design/brandbook/components/TomeFrame.md
+// Рамка-прогресс для статьи: на компьютере верхний край, на телефоне весь периметр.
+interface Props {
+  readingTime: number | null;
+}
+const { readingTime } = Astro.props;
+---
+
+<div class="tome-frame" aria-hidden="true" data-reading-time={readingTime ?? ''}>
+  <div class="tome-frame__top">
+    <div class="tome-frame__fill"></div>
+    <span class="tome-frame__label"></span>
+  </div>
+  <svg class="tome-frame__mobile" aria-hidden="true">
+    <rect class="tome-frame__mobile-fill" pathLength="100" />
+  </svg>
+</div>
+
+<script>
+  function pluralizeRu(n: number, forms: [string, string, string]): string {
+    const mod10 = n % 10;
+    const mod100 = n % 100;
+    if (mod10 === 1 && mod100 !== 11) return forms[0];
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return forms[1];
+    return forms[2];
+  }
+
+  const frame = document.querySelector<HTMLElement>('.tome-frame');
+  const paragraphs = document.querySelectorAll<HTMLElement>('.article-grid > p');
+  if (!frame || paragraphs.length === 0) {
+    // Без скрипта или без текста статьи рамка остаётся просто цветной (CSS по умолчанию).
+  } else {
+    const readingTime = Number(frame.dataset.readingTime) || 0;
+    const fill = frame.querySelector<HTMLElement>('.tome-frame__fill');
+    const label = frame.querySelector<HTMLElement>('.tome-frame__label');
+    const mobileFill = frame.querySelector<SVGRectElement>('.tome-frame__mobile-fill');
+    const mobileSvg = frame.querySelector<SVGSVGElement>('.tome-frame__mobile');
+    frame.classList.add('tome-frame--active');
+
+    const first = paragraphs[0];
+    const last = paragraphs[paragraphs.length - 1];
+
+    function sizeMobileFrame() {
+      if (!mobileSvg) return;
+      mobileSvg.setAttribute('viewBox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
+      const half = parseFloat(getComputedStyle(frame!).getPropertyValue('--frame-mobile')) / 2 || 4;
+      mobileFill?.setAttribute('x', String(half));
+      mobileFill?.setAttribute('y', String(half));
+      mobileFill?.setAttribute('width', String(window.innerWidth - half * 2));
+      mobileFill?.setAttribute('height', String(window.innerHeight - half * 2));
+    }
+
+    function update() {
+      const top = first.getBoundingClientRect().top + window.scrollY;
+      const bottom = last.getBoundingClientRect().bottom + window.scrollY;
+      const articleHeight = Math.max(bottom - top, 1);
+      const scrolled = window.scrollY + window.innerHeight - top;
+      const progress = Math.min(Math.max(scrolled / articleHeight, 0), 1);
+
+      if (fill) fill.style.width = `${progress * 100}%`;
+      if (mobileFill) mobileFill.style.strokeDasharray = `${progress * 100} 100`;
+
+      if (label) {
+        if (progress >= 0.999 || readingTime <= 0) {
+          label.textContent = '';
+        } else {
+          const minutesLeft = Math.ceil(readingTime * (1 - progress));
+          label.textContent = `ещё ${minutesLeft} ${pluralizeRu(minutesLeft, ['минута', 'минуты', 'минут'])}`;
+          label.style.left = `${progress * 100}%`;
+        }
+      }
+    }
+
+    let ticking = false;
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        update();
+        ticking = false;
+      });
+    }
+
+    sizeMobileFrame();
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', () => {
+      sizeMobileFrame();
+      update();
+    });
+  }
+</script>
+
+<style>
+  .tome-frame {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    border: var(--frame-desktop) solid var(--tome);
+    pointer-events: none;
+  }
+
+  .tome-frame__top,
+  .tome-frame__mobile {
+    display: none;
+  }
+
+  .tome-frame--active {
+    border-top-color: transparent;
+  }
+
+  .tome-frame--active .tome-frame__top {
+    display: block;
+    position: absolute;
+    top: calc(var(--frame-desktop) * -1);
+    left: calc(var(--frame-desktop) * -1);
+    right: calc(var(--frame-desktop) * -1);
+    height: var(--frame-desktop);
+    background: var(--rule);
+  }
+
+  .tome-frame__fill {
+    height: 100%;
+    width: 0%;
+    background: var(--tome);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .tome-frame__fill {
+      transition: width 120ms linear;
+    }
+  }
+
+  .tome-frame__label {
+    position: absolute;
+    top: 0;
+    transform: translate(var(--space-8), -2px);
+    white-space: nowrap;
+    font-family: var(--font-text);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--on-tome);
+  }
+
+  @media (max-width: 767px) {
+    .tome-frame {
+      border-width: var(--frame-mobile);
+    }
+
+    .tome-frame--active {
+      border-color: transparent;
+    }
+
+    .tome-frame--active .tome-frame__top {
+      display: none;
+    }
+
+    .tome-frame--active .tome-frame__mobile {
+      display: block;
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .tome-frame__mobile-fill {
+      fill: none;
+      stroke: var(--tome);
+      stroke-width: var(--frame-mobile);
+      stroke-dasharray: 0 100;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .tome-frame__mobile-fill {
+        transition: stroke-dasharray 120ms linear;
+      }
+    }
+  }
+</style>
