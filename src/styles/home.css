@@ -1,0 +1,209 @@
+/* Главная тома. docs/pages.md → «Главная тома» */
+
+.home-section {
+  padding: 0 var(--space-48);
+}
+
+.home-section + .home-section {
+  margin-top: var(--space-128);
+}
+
+.home-section__heading {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-section);
+  line-height: var(--lh-section);
+  font-weight: normal;
+}
+
+.home-section__lede {
+  margin: var(--space-16) 0 var(--space-64);
+  max-width: var(--text-measure);
+  font-family: var(--font-text);
+  font-style: italic;
+  font-size: var(--fs-lede);
+  line-height: var(--lh-lede);
+}
+
+/* Первый экран */
+.home-hero {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-24);
+  padding: var(--space-32) var(--space-48) 0;
+}
+
+.home-hero__cover {
+  grid-column: 1 / span 7;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+}
+
+.home-hero__cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-hero__content {
+  grid-column: 8 / span 5;
+}
+
+.home-hero__meta {
+  margin: 0;
+  font-family: var(--font-text);
+  font-style: italic;
+  font-size: var(--fs-flap-label);
+}
+
+.home-hero__lede {
+  margin: var(--space-24) 0 var(--space-32);
+  font-family: var(--font-text);
+  font-size: var(--fs-lede);
+  line-height: var(--lh-lede);
+}
+
+.home-hero__toc {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.home-hero__button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: var(--space-32);
+  padding: var(--space-16) var(--space-24);
+  border: none;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-text);
+  font-size: var(--fs-body);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.home-hero__button-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-dot);
+  background: var(--tome);
+}
+
+.home-hero__next-tome {
+  margin: var(--space-16) 0 0;
+  font-family: var(--font-text);
+  font-style: italic;
+  font-size: 15px;
+}
+
+/* В томе / Лента: сетка карточек */
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-24);
+}
+
+.home-grid--lenta {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* Пустое место в ленте, пока материалов нет (docs/roadmap.md → шаг 8) */
+.home-feed-placeholder {
+  aspect-ratio: 3 / 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-16);
+  border: var(--hairline) dashed var(--ink);
+  font-family: var(--font-text);
+  font-style: italic;
+  font-size: var(--fs-note);
+  color: var(--ink);
+}
+
+/* Рубрики главреда */
+.home-rubrics {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--space-64);
+}
+
+.home-rubrics__intro p {
+  margin: var(--space-16) 0 0;
+  max-width: var(--text-measure);
+  font-family: var(--font-text);
+}
+
+.home-rubrics__list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-32) var(--space-48);
+  margin: 0;
+}
+
+.home-rubric__title {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  font-family: var(--font-text);
+  font-weight: 700;
+  font-size: var(--fs-card-title);
+}
+
+.home-rubric__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-dot);
+  background: var(--tome);
+  flex: none;
+}
+
+.home-rubric__text {
+  margin: var(--space-8) 0 0;
+  font-family: var(--font-text);
+}
+
+/* Телефон и планшет */
+@media (max-width: 1024px) {
+  .home-section,
+  .home-hero {
+    padding-left: var(--page-margin-mobile);
+    padding-right: var(--page-margin-mobile);
+  }
+
+  .home-section + .home-section {
+    margin-top: var(--space-64);
+  }
+
+  .home-hero {
+    display: block;
+  }
+
+  .home-hero__cover {
+    aspect-ratio: auto;
+    height: 320px;
+  }
+
+  .home-hero__content {
+    margin-top: var(--space-24);
+  }
+
+  .home-grid,
+  .home-grid--lenta {
+    grid-template-columns: 1fr;
+  }
+
+  .home-rubrics {
+    grid-template-columns: 1fr;
+  }
+
+  .home-rubrics__list {
+    grid-template-columns: 1fr;
+  }
+}

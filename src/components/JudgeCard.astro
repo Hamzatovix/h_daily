@@ -1,0 +1,46 @@
+---
+// docs/components.md → JudgeCard: заглушка рубрики главреда, пока текста Мансура нет.
+---
+
+<div class="judge-card">
+  <p class="judge-card__title">Judge me by cover</p>
+  <p class="judge-card__placeholder">здесь будет фото обложки первого издания</p>
+  <p class="judge-card__caption">рубрика главреда · скоро</p>
+</div>
+
+<style>
+  .judge-card {
+    aspect-ratio: 3 / 4;
+    background: var(--ink);
+    color: var(--paper);
+    padding: var(--space-16);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .judge-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-flap-label);
+  }
+
+  .judge-card__placeholder {
+    flex: 1;
+    margin: var(--space-16) 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: var(--hairline) dashed var(--paper);
+    font-family: var(--font-text);
+    font-style: italic;
+    font-size: var(--fs-note);
+    padding: var(--space-16);
+  }
+
+  .judge-card__caption {
+    margin: 0;
+    font-family: var(--font-text);
+    font-size: var(--fs-meta);
+  }
+</style>

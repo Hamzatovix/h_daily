@@ -1,0 +1,99 @@
+---
+// docs/components.md, design/brandbook/components/Spine.md
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  tomes: CollectionEntry<'tomes'>[];
+  totalPerYear?: number;
+}
+const { tomes, totalPerYear = 6 } = Astro.props;
+
+// Ширина и высота корешков детерминированы номером тома, а не случайны при каждой сборке.
+function spineSize(n: number) {
+  const seed = Math.abs(Math.sin(n * 999) * 10000);
+  const frac = seed - Math.floor(seed);
+  const width = 74 + Math.round(frac * 38);
+  const height = 266 + Math.round(((frac * 7) % 1) * 154);
+  return { width, height };
+}
+
+const byNumber = new Map(tomes.map((t) => [t.data.number, t]));
+const slots = Array.from({ length: totalPerYear }, (_, i) => i + 1).map((number) => ({
+  number,
+  tome: byNumber.get(number),
+}));
+---
+
+<div class="spine">
+  {
+    slots.map(({ number, tome }) => {
+      const { width, height } = spineSize(number);
+      return tome ? (
+        <a class="spine__item spine__item--published" href={`/tom/${number}/`} style={`width:${width}px; height:${height}px; background:var(--tome-${tome.data.color})`}>
+          <span class="spine__dot" aria-hidden="true" />
+          <span class="spine__label">Том {number} {tome.data.title}</span>
+        </a>
+      ) : (
+        <div class="spine__item spine__item--pending" style={`width:${width}px; height:${height}px`}>
+          <span class="spine__label spine__label--pending">Том {number}</span>
+        </div>
+      );
+    })
+  }
+</div>
+<div class="spine__shelf" aria-hidden="true"></div>
+
+<style>
+  .spine {
+    display: flex;
+    align-items: flex-end;
+    gap: var(--space-8);
+  }
+
+  .spine__item {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-8);
+    padding: var(--space-16) 0;
+  }
+
+  .spine__item--published {
+    text-decoration: none;
+    color: var(--on-tome);
+  }
+
+  .spine__dot {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: var(--radius-dot);
+    background: var(--on-tome);
+  }
+
+  .spine__label {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-text);
+    font-size: var(--fs-flap-text);
+    white-space: nowrap;
+  }
+
+  .spine__item--pending {
+    border: var(--hairline) dashed var(--ink);
+  }
+
+  .spine__label--pending {
+    font-style: italic;
+    color: var(--ink);
+  }
+
+  .spine__shelf {
+    height: 12px;
+    background: var(--ink);
+  }
+</style>

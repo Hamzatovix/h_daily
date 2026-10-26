@@ -1,0 +1,64 @@
+---
+// docs/components.md, design/brandbook/components/FeedCard.md
+import type { CollectionEntry } from 'astro:content';
+import { AUTHORS } from '../lib/content/authors';
+import { readingTimeLabel } from '../lib/format/pluralize';
+import { slugFromId } from '../lib/content/slug';
+
+interface Props {
+  entry: CollectionEntry<'articles'>;
+  caption: string;
+}
+const { entry, caption } = Astro.props;
+const { title, tome, author, readingTime, coverSmall, cover, coverAlt } = entry.data;
+const authorInfo = AUTHORS[author];
+const href = `/tom/${tome}/${slugFromId(entry.id)}/`;
+const coverSrc = coverSmall ?? cover;
+---
+
+<a class="feed-card" href={href}>
+  <div class="feed-card__cover">{coverSrc && <img src={coverSrc} alt={coverAlt} width="300" height="400" loading="lazy" />}</div>
+  <p class="feed-card__caption">{caption}</p>
+  <p class="feed-card__title">{title}</p>
+  <p class="feed-card__meta">{authorInfo.name}, {readingTime !== null ? readingTimeLabel(readingTime).replace(' чтения', '') : 'скоро'}</p>
+</a>
+
+<style>
+  .feed-card {
+    display: block;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .feed-card__cover {
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+  }
+
+  .feed-card__cover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .feed-card__caption {
+    margin: var(--space-16) 0 0;
+    font-family: var(--font-text);
+    font-style: italic;
+    font-size: var(--fs-meta);
+  }
+
+  .feed-card__title {
+    margin: var(--space-8) 0 0;
+    font-family: var(--font-text);
+    font-size: var(--fs-card-title);
+    line-height: var(--lh-card-title);
+  }
+
+  .feed-card__meta {
+    margin: var(--space-8) 0 0;
+    font-family: var(--font-text);
+    font-size: var(--fs-meta);
+  }
+</style>

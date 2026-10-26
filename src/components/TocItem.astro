@@ -1,0 +1,100 @@
+---
+// docs/components.md, design/brandbook/components/TocItem.md
+import type { CollectionEntry } from 'astro:content';
+import { AUTHORS } from '../lib/content/authors';
+import { readingTimeLabel } from '../lib/format/pluralize';
+import { slugFromId } from '../lib/content/slug';
+
+interface Props {
+  order: number;
+  entry: CollectionEntry<'articles'>;
+}
+const { order, entry } = Astro.props;
+const { title, subtitle, author, readingTime, status, tome } = entry.data;
+const authorInfo = AUTHORS[author];
+const isDraft = status === 'draft';
+const href = `/tom/${tome}/${slugFromId(entry.id)}/`;
+---
+
+<li class="toc-item">
+  <span class="toc-item__number">{order}</span>
+  <div class="toc-item__body">
+    {isDraft ? <p class="toc-item__title">{title}</p> : <a class="toc-item__title" href={href}>{title}</a>}
+    <p class="toc-item__description">{isDraft ? 'Рубрика главреда. Текст готовится' : subtitle}</p>
+  </div>
+  <div class="toc-item__meta">
+    <span>{authorInfo.name}</span>
+    <span>{isDraft || readingTime === null ? 'скоро' : readingTimeLabel(readingTime).replace(' чтения', '')}</span>
+  </div>
+</li>
+
+<style>
+  .toc-item {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: var(--space-24);
+    align-items: start;
+    padding: var(--space-16) 0;
+    border-top: var(--hairline) solid var(--ink);
+  }
+
+  .toc-item__number {
+    font-family: var(--font-display);
+    font-size: var(--fs-flap-label);
+  }
+
+  .toc-item__title {
+    display: block;
+    margin: 0;
+    font-family: var(--font-text);
+    font-size: var(--fs-card-title);
+    line-height: var(--lh-card-title);
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .toc-item__description {
+    margin: var(--space-4) 0 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-family: var(--font-text);
+    font-style: italic;
+    font-size: 16px;
+  }
+
+  .toc-item__meta {
+    text-align: right;
+    font-family: var(--font-text);
+    font-size: var(--fs-meta);
+    white-space: nowrap;
+  }
+
+  .toc-item__meta span {
+    display: block;
+  }
+
+  @media (max-width: 1024px) {
+    .toc-item {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .toc-item__description {
+      white-space: normal;
+    }
+
+    .toc-item__meta {
+      grid-column: 2;
+      text-align: left;
+      margin-top: var(--space-4);
+    }
+
+    .toc-item__meta span {
+      display: inline;
+    }
+
+    .toc-item__meta span + span::before {
+      content: ', ';
+    }
+  }
+</style>

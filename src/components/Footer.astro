@@ -1,12 +1,25 @@
 ---
-// docs/components.md → Footer (короткий вариант для статьи). На телефоне здесь же меню.
+// docs/components.md → Footer. short — короткий вариант статьи, full — главная тома.
+// На телефоне здесь же меню.
+interface Props {
+  variant?: 'short' | 'full';
+}
+const { variant = 'short' } = Astro.props;
 ---
 
-<footer class="site-footer">
-  <div class="site-footer__row">
-    <img src="/brand/logo-on-black.svg" alt="HAMZATOVIC daily" height="30" />
-    <p>Журнал о кино, книгах и музыке</p>
-  </div>
+<footer class:list={['site-footer', `site-footer--${variant}`]}>
+  <img class="site-footer__logo" src="/brand/logo-on-black.svg" alt="HAMZATOVIC daily" />
+  {
+    variant === 'full' ? (
+      <div class="site-footer__info">
+        <p>Журнал о кино, книгах и музыке</p>
+        <p>Главный редактор — Мансур</p>
+        <p>Тартт — редакционный псевдоним</p>
+      </div>
+    ) : (
+      <p class="site-footer__tagline">Журнал о кино, книгах и музыке</p>
+    )
+  }
   <nav class="site-footer__nav" aria-label="Разделы">
     <a href="/lenta/">Лента</a>
     <a href="/toma/">Тома</a>
@@ -16,26 +29,41 @@
 
 <style>
   .site-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-24);
     padding: var(--space-32) var(--space-48);
     background: var(--ink);
     color: var(--paper);
   }
 
-  .site-footer__row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-24);
-  }
-
-  .site-footer__row img {
+  .site-footer__logo {
     display: block;
     height: 30px;
     width: auto;
   }
 
-  .site-footer__row p {
+  .site-footer--full {
+    justify-content: space-between;
+    padding: var(--space-48);
+  }
+
+  .site-footer--full .site-footer__logo {
+    height: 84px;
+  }
+
+  .site-footer__tagline {
     margin: 0;
     font-family: var(--font-text);
+  }
+
+  .site-footer__info {
+    text-align: right;
+    font-family: var(--font-text);
+  }
+
+  .site-footer__info p {
+    margin: 0;
   }
 
   .site-footer__nav {
@@ -44,7 +72,17 @@
 
   @media (max-width: 1024px) {
     .site-footer {
+      flex-direction: column;
+      align-items: flex-start;
       padding: var(--space-32) var(--page-margin-mobile);
+    }
+
+    .site-footer--full .site-footer__logo {
+      height: 48px;
+    }
+
+    .site-footer__info {
+      text-align: left;
     }
 
     .site-footer__nav {
@@ -55,6 +93,7 @@
       padding-top: var(--space-24);
       border-top: var(--hairline) solid var(--paper);
       font-family: var(--font-text);
+      width: 100%;
     }
 
     .site-footer__nav a {
