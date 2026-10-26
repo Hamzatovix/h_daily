@@ -5,7 +5,9 @@ import type { Root, Element, ElementContent, RootContent } from 'hast';
  * в сноски на полях: убирает секцию, вставляет `<details class="sidenote">` сразу после
  * абзаца, в котором встретилась ссылка на неё. На телефоне `<details>` даёт раскрытие
  * по нажатию без JS (docs/components.md → Sidenote); на компьютере CSS держит её открытой.
- * Ссылка в тексте ведёт на id сноски: браузер сам раскрывает `<details>` по переходу.
+ * Ссылка в тексте ведёт на id сноски (и может раскрыть `<details>` переходом по ссылке),
+ * внутри сноски — ссылка обратно к месту в тексте (docs/quality.md → Доступность).
+ * `role="doc-noteref"`/`doc-footnote` — чтобы экранный диктор читал их как сноски.
  */
 export function rehypeSidenotes() {
   return (tree: Root) => {
@@ -52,6 +54,9 @@ function findFootnoteRefs(node: Element): string[] {
     if (n.type === 'element' && n.tagName === 'a' && n.properties?.dataFootnoteRef !== undefined) {
       const num = String(n.properties?.id ?? '').replace('user-content-fnref-', '');
       n.properties.href = `#fn-${num}`;
+      n.properties.id = `fnref-${num}`;
+      n.properties.role = 'doc-noteref';
+      n.properties['aria-label'] = `Сноска ${num}`;
       refs.push(num);
     }
     if (n.type === 'element') n.children.forEach(walk);
@@ -64,7 +69,7 @@ function buildSidenote(num: string, content: ElementContent[]): Element {
   return {
     type: 'element',
     tagName: 'details',
-    properties: { className: ['sidenote'], id: `fn-${num}` },
+    properties: { className: ['sidenote'], id: `fn-${num}`, role: 'doc-footnote' },
     children: [
       {
         type: 'element',
@@ -77,6 +82,12 @@ function buildSidenote(num: string, content: ElementContent[]): Element {
         tagName: 'span',
         properties: { className: ['sidenote-text'] },
         children: content,
+      },
+      {
+        type: 'element',
+        tagName: 'a',
+        properties: { className: ['sr-only'], href: `#fnref-${num}`, role: 'doc-backlink', 'aria-label': 'К тексту' },
+        children: [{ type: 'text', value: '↩' }],
       },
     ],
   };

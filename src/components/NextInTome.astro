@@ -38,7 +38,7 @@ const { cards } = Astro.props;
       cards.map((card) =>
         card.kind === 'article' ? (
           <a class="next-card" href={card.href}>
-            {card.cover && <img class="next-card__cover" src={card.cover} alt={card.coverAlt} width="200" height="267" />}
+            {card.cover && <img class="next-card__cover" src={card.cover} alt={card.coverAlt} width="200" height="267" loading="lazy" />}
             <div class="next-card__body">
               <p class="next-card__caption">{card.caption}</p>
               <p class="next-card__title">{card.title}</p>
@@ -58,7 +58,7 @@ const { cards } = Astro.props;
           </div>
         ) : (
           <a class="next-card" href={card.href}>
-            <img class="next-card__cover" src={card.cover} alt={card.coverAlt} width="200" height="267" />
+            <img class="next-card__cover" src={card.cover} alt={card.coverAlt} width="200" height="267" loading="lazy" />
             <div class="next-card__body">
               <p class="next-card__caption">Весь том</p>
               <p class="next-card__title">{card.tomeTitle}: оглавление</p>

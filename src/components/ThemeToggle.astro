@@ -34,12 +34,22 @@
 
 <style>
   .theme-toggle {
+    position: relative;
     width: 20px;
     height: 20px;
     padding: 0;
+    overflow: hidden;
     border: var(--hairline) solid var(--ink);
     border-radius: var(--radius-dot);
-    background: linear-gradient(90deg, var(--ink) 50%, transparent 50%);
+    background: var(--paper);
     cursor: pointer;
+  }
+
+  .theme-toggle::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    left: 50%;
+    background: var(--ink);
   }
 </style>

@@ -2,6 +2,11 @@
 import { getCollection } from 'astro:content';
 import '../styles/tokens.css';
 import '../styles/global.css';
+import '../styles/print.css';
+// Предзагрузка двух основных начертаний (docs/quality.md → Типографика).
+import delaCyrillicUrl from '@fontsource/dela-gothic-one/files/dela-gothic-one-cyrillic-400-normal.woff2?url';
+import literataCyrillicUrl from '@fontsource/literata/files/literata-cyrillic-400-normal.woff2?url';
+import literataLatinUrl from '@fontsource/literata/files/literata-latin-400-normal.woff2?url';
 
 interface Props {
   title?: string;
@@ -36,6 +41,9 @@ const ogImageUrl = image ? new URL(image, Astro.site).toString() : undefined;
 <html lang="ru" data-tome={tome.data.color}>
   <head>
     <meta charset="utf-8" />
+    <link rel="preload" as="font" type="font/woff2" href={delaCyrillicUrl} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={literataCyrillicUrl} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={literataLatinUrl} crossorigin />
     <script is:inline>
       // Тема до первой отрисовки, чтобы ночью не было белой вспышки.
       // Пусто — следуем prefers-color-scheme (правило в tokens.css).

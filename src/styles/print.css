@@ -1,0 +1,55 @@
+/* Печать статьи на A4: без шапки, рамки и клапанов, сноски — в конце, адрес статьи внизу.
+   docs/quality.md → «Печать». Сноски переносятся в конец чистым CSS (flex order),
+   без лишнего JS на странице статьи. */
+
+.print-only {
+  display: none;
+}
+
+@media print {
+  .tome-frame,
+  .site-header,
+  .flap,
+  .next-in-tome,
+  .site-footer {
+    display: none !important;
+  }
+
+  body {
+    padding: 0;
+  }
+
+  .article-grid {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .article-grid > p {
+    order: 1;
+    max-width: none;
+    grid-column: auto;
+  }
+
+  .article-grid > .sidenote,
+  .article-grid > .margin-quote {
+    order: 2;
+    grid-column: auto;
+    break-inside: avoid;
+  }
+
+  .article-grid > .sidenote .sidenote-text {
+    display: inline !important;
+  }
+
+  .article-grid > .margin-quote .margin-quote-share {
+    display: none;
+  }
+
+  .print-only {
+    display: block;
+    margin-top: var(--space-32);
+    font-family: var(--font-text);
+    font-size: var(--fs-meta);
+  }
+}

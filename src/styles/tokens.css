@@ -19,8 +19,8 @@
   --tome: var(--tome-cobalt);
   color-scheme: light;
 
-  --font-display: "Dela Gothic One", "Arial Black", sans-serif;
-  --font-text: "Literata", Georgia, serif;
+  --font-display: "Dela Gothic One", "Dela Gothic One Fallback", "Arial Black", sans-serif;
+  --font-text: "Literata", "Literata Fallback", Georgia, serif;
   --fs-cover-title: 149px;
   --lh-cover-title: 0.86;
   --fs-article-title: 95px;

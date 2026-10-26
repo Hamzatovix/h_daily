@@ -96,6 +96,7 @@ for (let i = 0; i < 2; i++) {
       <Flap flap={entry.data.flap} author={entry.data.author} />
       <Content />
     </div>
+    <p class="print-only">{new URL(Astro.url.pathname, Astro.site)}</p>
   </main>
   <NextInTome cards={cards} />
   <Footer />

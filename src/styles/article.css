@@ -13,6 +13,7 @@
   margin: 0;
   font-family: var(--font-text);
   font-variant-numeric: oldstyle-nums;
+  hyphens: auto;
 }
 
 .article-grid > p:not(.lede) {
@@ -69,6 +70,7 @@
   margin-right: var(--space-4);
 }
 
+
 .article-grid > .margin-quote {
   grid-column: 10 / span 3;
   align-self: end;
@@ -106,6 +108,10 @@
 @media (min-width: 1025px) {
   .article-grid > .sidenote .sidenote-text {
     display: inline !important;
+  }
+
+  .article-grid > .sidenote .sr-only {
+    display: block !important;
   }
 }
 

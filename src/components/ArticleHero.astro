@@ -17,7 +17,7 @@ const coverSrc = coverSvg ?? cover;
 
 <section class="article-hero">
   <div class="article-hero__cover">
-    {coverSrc && <img src={coverSrc} alt={coverAlt} width="640" height="853" />}
+    {coverSrc && <img src={coverSrc} alt={coverAlt} width="640" height="853" fetchpriority="high" loading="eager" />}
   </div>
   <div class="article-hero__content">
     <p class="article-hero__meta article-hero__meta--desktop">{genre}. Том {tome}, материал {position} из {total}</p>

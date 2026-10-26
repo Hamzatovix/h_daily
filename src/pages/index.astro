@@ -34,8 +34,9 @@ const RUBRICS = [
 <Base title={tome.data.title} description={tome.data.lede} tome={tome.data.number} image={tome.data.cover}>
   <Header tomeNumber={tome.data.number} tomeTitle={tome.data.title} />
   <main>
+    <h1 class="sr-only">Том {tome.data.number}. {tome.data.title}</h1>
     <section class="home-hero">
-      <div class="home-hero__cover">{coverSrc && <img src={coverSrc} alt={tome.data.coverAlt} width="700" height="933" />}</div>
+      <div class="home-hero__cover">{coverSrc && <img src={coverSrc} alt={tome.data.coverAlt} width="700" height="933" fetchpriority="high" loading="eager" />}</div>
       <div class="home-hero__content">
         <p class="home-hero__meta">Том {tome.data.number} из шести в этом году</p>
         <p class="home-hero__lede">{tome.data.lede}</p>
