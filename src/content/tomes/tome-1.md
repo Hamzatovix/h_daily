@@ -1,7 +1,7 @@
 ---
 number: 1
 title: "Второй голос"
-color: plum            # tome-plum: #6B2C91 днём, #C99BEA ночью
+color: cobalt          # tome-cobalt: #1E3FD8 днём, #8FA4FF ночью
 lede: "Тома выходят раз в два месяца, у каждого одна тема. Этот — о голосах, которые звучат, пока их владельцев не видно: о переводчице, певице без титров, женщине, нашедшей чужую песню, и подростке, который говорит чужими песнями."
 cover: "/covers/tome-1-vtoroj-golos.webp"
 coverSvg: "/covers/tome-1-vtoroj-golos.svg"
