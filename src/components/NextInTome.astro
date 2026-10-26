@@ -1,0 +1,170 @@
+---
+// docs/components.md → NextInTome
+export interface ArticleCard {
+  kind: 'article';
+  href: string;
+  cover: string | null;
+  coverAlt: string;
+  caption: string;
+  title: string;
+  author: string;
+  minutes: string;
+}
+export interface JudgeCard {
+  kind: 'judge';
+  title: string;
+  caption: string;
+}
+export interface TocCard {
+  kind: 'toc';
+  href: string;
+  cover: string;
+  coverAlt: string;
+  tomeTitle: string;
+  summary: string;
+}
+export type NextCard = ArticleCard | JudgeCard | TocCard;
+
+interface Props {
+  cards: NextCard[];
+}
+const { cards } = Astro.props;
+---
+
+<section class="next-in-tome">
+  <h2 class="next-in-tome__heading">Дальше в томе</h2>
+  <div class="next-in-tome__grid">
+    {
+      cards.map((card) =>
+        card.kind === 'article' ? (
+          <a class="next-card" href={card.href}>
+            {card.cover && <img class="next-card__cover" src={card.cover} alt={card.coverAlt} width="200" height="267" />}
+            <div class="next-card__body">
+              <p class="next-card__caption">{card.caption}</p>
+              <p class="next-card__title">{card.title}</p>
+              <p class="next-card__meta">{card.author}, {card.minutes}</p>
+            </div>
+          </a>
+        ) : card.kind === 'judge' ? (
+          <div class="next-card next-card--judge">
+            <div class="judge-card">
+              <p class="judge-card__title">{card.title}</p>
+              <p class="judge-card__placeholder">здесь будет фото обложки первого издания</p>
+              <p class="judge-card__caption">рубрика главреда · скоро</p>
+            </div>
+            <div class="next-card__body">
+              <p class="next-card__meta">{card.caption}</p>
+            </div>
+          </div>
+        ) : (
+          <a class="next-card" href={card.href}>
+            <img class="next-card__cover" src={card.cover} alt={card.coverAlt} width="200" height="267" />
+            <div class="next-card__body">
+              <p class="next-card__caption">Весь том</p>
+              <p class="next-card__title">{card.tomeTitle}: оглавление</p>
+              <p class="next-card__meta">{card.summary}</p>
+            </div>
+          </a>
+        ),
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .next-in-tome {
+    padding: var(--space-64) var(--space-48);
+  }
+
+  .next-in-tome__heading {
+    margin: 0 0 var(--space-32);
+    font-family: var(--font-display);
+    font-size: var(--fs-subhead);
+    line-height: var(--lh-subhead);
+    font-weight: normal;
+  }
+
+  .next-in-tome__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-48);
+  }
+
+  .next-card {
+    display: flex;
+    gap: var(--space-24);
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .next-card__cover {
+    flex: none;
+    width: 200px;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+  }
+
+  .next-card__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .next-card__caption {
+    margin: 0 0 var(--space-8);
+    font-family: var(--font-text);
+    font-style: italic;
+    font-size: var(--fs-flap-text);
+  }
+
+  .next-card__title {
+    margin: 0 0 var(--space-8);
+    font-family: var(--font-text);
+    font-size: var(--fs-card-title);
+    line-height: var(--lh-card-title);
+  }
+
+  .next-card__meta {
+    margin: 0;
+    font-family: var(--font-text);
+    font-style: italic;
+    font-size: var(--fs-meta);
+  }
+
+  .judge-card {
+    flex: none;
+    width: 200px;
+    aspect-ratio: 3 / 4;
+    background: var(--ink);
+    color: var(--paper);
+    padding: var(--space-16);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .judge-card__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-flap-label);
+  }
+
+  .judge-card__placeholder {
+    margin: auto 0;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: var(--hairline) dashed var(--paper);
+    font-family: var(--font-text);
+    font-style: italic;
+    font-size: var(--fs-note);
+    padding: var(--space-16);
+  }
+
+  .judge-card__caption {
+    margin: 0;
+    font-family: var(--font-text);
+    font-size: var(--fs-meta);
+  }
+</style>

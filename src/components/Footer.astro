@@ -1,0 +1,30 @@
+---
+// docs/components.md → Footer (короткий вариант для статьи)
+---
+
+<footer class="site-footer">
+  <img src="/brand/logo-on-black.svg" alt="HAMZATOVIC daily" height="30" />
+  <p>Журнал о кино, книгах и музыке</p>
+</footer>
+
+<style>
+  .site-footer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-24);
+    padding: var(--space-32) var(--space-48);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .site-footer img {
+    display: block;
+    height: 30px;
+    width: auto;
+  }
+
+  .site-footer p {
+    margin: 0;
+    font-family: var(--font-text);
+  }
+</style>

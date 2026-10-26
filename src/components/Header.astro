@@ -1,0 +1,75 @@
+---
+// docs/components.md, design/brandbook/components/Header.md
+interface Props {
+  tomeNumber: number;
+  tomeTitle: string;
+}
+const { tomeNumber, tomeTitle } = Astro.props;
+---
+
+<header class="site-header">
+  <a class="site-header__tome" href={`/tom/${tomeNumber}/`}>Том {tomeNumber}. {tomeTitle}</a>
+  <a class="site-header__logo" href="/" aria-label="HAMZATOVIC daily — на главную">
+    <img src="/brand/logo-horizontal.svg" alt="HAMZATOVIC daily" height="30" />
+  </a>
+  <nav class="site-header__nav" aria-label="Разделы">
+    <a href="/lenta/">Лента</a>
+    <a href="/toma/">Тома</a>
+    <a href="/o-zhurnale/">О журнале</a>
+    <button type="button" class="theme-toggle" aria-label="Ночной режим" aria-pressed="false"></button>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    height: 88px;
+    padding: 0 var(--space-48);
+    border-bottom: var(--hairline) solid var(--ink);
+  }
+
+  .site-header__tome {
+    justify-self: start;
+    font-family: var(--font-text);
+    font-style: italic;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .site-header__logo {
+    justify-self: center;
+    display: block;
+    line-height: 0;
+  }
+
+  .site-header__logo img {
+    display: block;
+    height: 30px;
+    width: auto;
+  }
+
+  .site-header__nav {
+    justify-self: end;
+    display: flex;
+    align-items: center;
+    gap: var(--space-24);
+    font-family: var(--font-text);
+  }
+
+  .site-header__nav a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .theme-toggle {
+    width: 20px;
+    height: 20px;
+    padding: 0;
+    border: var(--hairline) solid var(--ink);
+    border-radius: var(--radius-dot);
+    background: linear-gradient(90deg, var(--ink) 50%, transparent 50%);
+    cursor: pointer;
+  }
+</style>

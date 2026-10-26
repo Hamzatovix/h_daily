@@ -1,0 +1,95 @@
+/* Три колонки статьи: клапан (3), текст (6), сноски и цитата (3). docs/components.md */
+
+.article-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0 var(--space-24);
+  padding: var(--space-32) var(--space-48) 0;
+}
+
+.article-grid > p {
+  grid-column: 4 / span 6;
+  max-width: var(--text-measure);
+  margin: 0;
+  font-family: var(--font-text);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  font-variant-numeric: oldstyle-nums;
+}
+
+.article-grid > p:not(.lede) {
+  text-indent: 1.6em;
+}
+
+.article-grid > p.lede {
+  font-size: var(--fs-lede);
+  line-height: var(--lh-lede);
+  font-style: italic;
+}
+
+.article-grid > p sup {
+  font-weight: 700;
+}
+
+.article-grid > p sup a {
+  color: var(--tome);
+  text-decoration: none;
+}
+
+.article-grid mark.quote {
+  background: none;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--tome);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}
+
+.article-grid > .sidenote {
+  grid-column: 10 / span 3;
+  align-self: start;
+  padding-top: var(--space-4);
+  border-top: 3px solid var(--tome);
+  font-family: var(--font-text);
+  font-size: var(--fs-note);
+  line-height: var(--lh-note);
+}
+
+.article-grid > .sidenote .sidenote-number {
+  color: var(--tome);
+  font-weight: 700;
+  margin-right: var(--space-4);
+}
+
+.article-grid > .margin-quote {
+  grid-column: 10 / span 3;
+  align-self: end;
+  padding-bottom: var(--space-32);
+}
+
+.article-grid > .margin-quote .margin-quote-text {
+  margin: 0;
+  font-family: var(--font-display);
+  color: var(--tome);
+  font-size: var(--fs-margin-quote);
+  line-height: var(--lh-margin-quote);
+}
+
+.article-grid > .margin-quote .margin-quote-share {
+  display: inline-block;
+  margin-top: var(--space-8);
+  font-family: var(--font-text);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--tome);
+}
+
+.end-mark {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-left: var(--space-8);
+  background: var(--tome);
+  border-radius: var(--radius-dot);
+  vertical-align: middle;
+}

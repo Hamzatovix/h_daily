@@ -1,0 +1,112 @@
+---
+// docs/components.md → Flap, design/brandbook/components/Flap.md
+import type { CollectionEntry } from 'astro:content';
+import { AUTHORS } from '../lib/content/authors';
+
+interface Props {
+  flap: CollectionEntry<'articles'>['data']['flap'];
+  author: CollectionEntry<'articles'>['data']['author'];
+}
+const { flap, author } = Astro.props;
+const authorInfo = AUTHORS[author];
+---
+
+<aside class="flap">
+  {
+    flap.map((group) => (
+      <div class="flap__group">
+        <h2 class="flap__label">{group.label}</h2>
+        <ul class="flap__items">
+          {group.items.map((item) => (
+            <li class="flap__item">
+              {item.play && (
+                <span class="flap__play" aria-disabled={!item.href}>
+                  <span class="flap__play-icon" aria-hidden="true" />
+                </span>
+              )}
+              <span class="flap__text">{item.text}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))
+  }
+  <div class="flap__group flap__group--author">
+    <h2 class="flap__label">Автор</h2>
+    <p class="flap__text">
+      {authorInfo.name}. {authorInfo.bio}
+    </p>
+  </div>
+</aside>
+
+<style>
+  .flap {
+    grid-column: 1 / span 3;
+    grid-row: 1 / -1;
+    background: var(--flap);
+    border-right: var(--hairline) dashed var(--ink);
+    padding: var(--space-48) var(--space-32);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-32);
+  }
+
+  .flap__group--author {
+    margin-top: auto;
+  }
+
+  .flap__label {
+    margin: 0 0 var(--space-16);
+    font-family: var(--font-display);
+    font-size: var(--fs-flap-label);
+    line-height: var(--lh-flap-label);
+    font-weight: normal;
+  }
+
+  .flap__items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+  }
+
+  .flap__item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-8);
+  }
+
+  .flap__text {
+    margin: 0;
+    font-family: var(--font-text);
+    font-size: var(--fs-flap-text);
+    line-height: var(--lh-flap-text);
+  }
+
+  .flap__play {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    margin-top: 2px;
+    border-radius: var(--radius-dot);
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .flap__play[aria-disabled='true'] {
+    opacity: 0.5;
+  }
+
+  .flap__play-icon {
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 8px solid var(--paper);
+  }
+</style>
