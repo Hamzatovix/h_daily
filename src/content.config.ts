@@ -19,5 +19,31 @@ const tomes = defineCollection({
   }),
 });
 
-// Коллекция articles — шаг 2 (docs/roadmap.md).
-export const collections = { tomes };
+const flapItem = z.object({
+  text: z.string(),
+  play: z.boolean().optional(),
+  href: z.string().optional(),
+});
+
+const articles = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/articles' }),
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string(),
+    tome: z.number().int(),
+    order: z.number().int(),
+    section: z.enum(['music', 'film', 'books']),
+    genre: z.string(),
+    author: z.enum(['tartt', 'mansur']),
+    readingTime: z.number().int().nullable(),
+    cover: z.string().nullable(),
+    coverSmall: z.string().optional(),
+    coverSvg: z.string().optional(),
+    coverAlt: z.string(),
+    quote: z.string().nullable(),
+    flap: z.array(z.object({ label: z.string(), items: z.array(flapItem) })).max(4),
+    status: z.enum(['published', 'draft']),
+  }),
+});
+
+export const collections = { tomes, articles };
