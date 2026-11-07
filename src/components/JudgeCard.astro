@@ -43,4 +43,16 @@
     font-family: var(--font-text);
     font-size: var(--fs-meta);
   }
+
+  @media (max-width: 1024px) {
+    .judge-card {
+      aspect-ratio: auto;
+      min-height: 112px;
+      gap: var(--space-16);
+    }
+
+    .judge-card__placeholder {
+      display: none;
+    }
+  }
 </style>

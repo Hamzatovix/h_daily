@@ -48,6 +48,9 @@ const slots = Array.from({ length: totalPerYear }, (_, i) => i + 1).map((number)
     display: flex;
     align-items: flex-end;
     gap: var(--space-8);
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
   }
 
   .spine__item {

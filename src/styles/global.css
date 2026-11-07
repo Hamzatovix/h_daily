@@ -35,15 +35,33 @@
 }
 
 html {
-  background: var(--tome);
+  background: var(--paper);
+  --page-frame: 0px;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+}
+
+html[data-reading='true'] {
+  --page-frame: var(--frame-desktop);
+}
+
+html[data-cover-frame='true'] {
+  --page-frame: var(--space-8);
+  background: var(--tome);
+}
+
+.cover-frame {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  border: var(--page-frame) solid var(--tome);
+  pointer-events: none;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
-  padding: var(--frame-desktop);
+  padding: var(--page-frame);
   background: var(--paper);
   background-clip: content-box;
   color: var(--ink);
@@ -82,8 +100,14 @@ body {
 
 /* Телефон: до 767px (docs/components.md). */
 @media (max-width: 767px) {
+  html[data-cover-frame='true'] {
+    --page-frame: var(--space-4);
+  }
+  html[data-reading='true'] {
+    --page-frame: var(--frame-mobile);
+  }
+
   body {
-    padding: var(--frame-mobile);
     font-size: var(--fs-body-mobile);
     line-height: var(--lh-body-mobile);
   }

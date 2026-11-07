@@ -21,7 +21,7 @@ if (!tome) throw new Error('Нет ни одного опубликованно�
       <p class="home-section__lede">то, что выходит между томами</p>
       <p class="lenta-empty">
         Пока здесь пусто.
-        {tome.data.publishedAt ? ` Следующий том выйдет ${tome.data.publishedAt.toLocaleDateString('ru-RU')} — а пока` : ' Пока его нет,'}
+        {tome.data.nextPublishedAt ? ` Следующий том выйдет ${tome.data.nextPublishedAt.toLocaleDateString('ru-RU')} — а пока` : ' Пока его нет,'}
         {' '}читайте <a href={`/tom/${tome.data.number}/`}>том {tome.data.number}</a>.
       </p>
     </section>

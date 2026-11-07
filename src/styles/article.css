@@ -1,5 +1,17 @@
 /* Три колонки статьи: клапан (3), текст (6), сноски и цитата (3). docs/components.md */
 
+.article-end {
+  margin: var(--space-32) var(--space-48) 0;
+  padding-top: var(--space-16);
+  border-top: var(--hairline) solid var(--ink);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-16) var(--space-24);
+  font-size: var(--fs-meta);
+  font-style: italic;
+}
+.article-end a { color: var(--ink); padding: var(--space-8) 0; }
+
 .article-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -118,9 +130,12 @@
 /* Телефон и планшет: колонка на всю ширину, клапан и сноска сворачиваются, цитата на полях скрыта.
    docs/components.md → «Телефон», design/screens/06-mobile.jpg */
 @media (max-width: 1024px) {
+  .article-end {
+    margin: var(--space-24) var(--page-margin-mobile) 0;
+  }
   .article-grid {
     grid-template-columns: 1fr;
-    gap: var(--space-24) 0;
+    gap: 0;
     padding: var(--space-24) var(--page-margin-mobile) 0;
   }
 
@@ -131,11 +146,21 @@
     line-height: var(--lh-body-mobile);
   }
 
+  .article-grid > p.lede {
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+  }
+
+  .article-grid > .flap {
+    margin-bottom: var(--space-24);
+  }
+
   .article-grid > .sidenote {
     grid-column: 1;
     background: var(--flap);
     padding: var(--space-16);
     cursor: pointer;
+    margin: var(--space-16) 0;
   }
 
   .article-grid > .sidenote[open] {

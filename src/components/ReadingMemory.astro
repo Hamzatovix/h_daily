@@ -1,0 +1,62 @@
+---
+interface Props { tome: number; article?: boolean }
+const { tome, article = false } = Astro.props;
+---
+<span hidden data-reading-memory data-tome={tome} data-article={String(article)}></span>
+<script>
+  const marker = document.querySelector<HTMLElement>('[data-reading-memory]');
+  if (marker) {
+    const key = `reading:tome:${marker.dataset.tome}`;
+    type Position = { paragraph: number; fraction: number; done: boolean };
+    type Memory = { last?: string; positions: Record<string, Position> };
+    function read(): Memory {
+      try {
+        const value = JSON.parse(localStorage.getItem(key) ?? 'null');
+        if (value && typeof value.positions === 'object' && value.positions !== null) return value;
+      } catch {}
+      return { positions: {} };
+    }
+    const memory = read();
+    document.querySelectorAll<HTMLAnchorElement>('[data-reading-link]').forEach(link => {
+      const position = memory.positions[new URL(link.href).pathname];
+      if (position?.done) link.dataset.read = 'true';
+    });
+    document.querySelectorAll<HTMLAnchorElement>('[data-resume-link]').forEach(link => {
+      const path = new URL(link.href).pathname;
+      if (memory.last === path && memory.positions[path] && !memory.positions[path].done) link.hidden = false;
+    });
+    if (marker.dataset.article === 'true') {
+      const paragraphs = [...document.querySelectorAll<HTMLElement>('.article-grid > p')];
+      const path = location.pathname;
+      const saved = memory.positions[path];
+      if (location.hash === '#continue' && saved && Number.isInteger(saved.paragraph)) {
+        document.fonts.ready.then(() => {
+          const p = paragraphs[saved.paragraph];
+          if (!p) return;
+          const fraction = Math.min(1, Math.max(0, Number(saved.fraction) || 0));
+          window.scrollTo(0, p.getBoundingClientRect().top + scrollY + p.offsetHeight * fraction - innerHeight * .3);
+        });
+      }
+      function save() {
+        if (!paragraphs.length) return;
+        const line = innerHeight * .3;
+        if (paragraphs[0].getBoundingClientRect().top > line) return;
+        let index = paragraphs.findIndex(p => p.getBoundingClientRect().bottom > line);
+        if (index === -1) index = paragraphs.length - 1;
+        const p = paragraphs[index];
+        const done = paragraphs[paragraphs.length - 1].getBoundingClientRect().bottom <= innerHeight - 32;
+        const latest = read();
+        latest.last = path;
+        latest.positions[path] = { paragraph: index, fraction: Math.max(0, Math.min(1, (line - p.getBoundingClientRect().top) / p.offsetHeight)), done };
+        try { localStorage.setItem(key, JSON.stringify(latest)); } catch {}
+      }
+      let timer = 0;
+      window.addEventListener('scroll', () => {
+        clearTimeout(timer);
+        timer = window.setTimeout(save, 250);
+      }, { passive: true });
+      window.addEventListener('pagehide', save);
+      document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
+    }
+  }
+</script>

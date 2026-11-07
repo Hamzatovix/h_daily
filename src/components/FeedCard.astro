@@ -61,4 +61,32 @@ const coverSrc = coverSmall ?? cover;
     font-family: var(--font-text);
     font-size: var(--fs-meta);
   }
+
+  @media (max-width: 1024px) {
+    .feed-card {
+      display: grid;
+      grid-template-columns: 80px minmax(0, 1fr);
+      column-gap: var(--space-16);
+      border-top: var(--hairline) solid var(--ink);
+      padding-top: var(--space-16);
+      align-content: start;
+    }
+
+    .feed-card__cover {
+      grid-column: 1;
+      grid-row: 1 / span 3;
+    }
+
+    .feed-card__caption,
+    .feed-card__title,
+    .feed-card__meta {
+      grid-column: 2;
+      margin-top: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .feed-card__title {
+      font-size: var(--fs-flap-label);
+    }
+  }
 </style>

@@ -133,6 +133,12 @@ const { cards } = Astro.props;
       padding: var(--space-8);
     }
 
+    .next-card__cover {
+      height: auto;
+      align-self: flex-start;
+      padding: 0;
+    }
+
     /* design/brandbook/components.md → JudgeCard: меньше ~120px — только название и рамка. */
     .judge-card__placeholder,
     .judge-card__caption {
@@ -189,5 +195,36 @@ const { cards } = Astro.props;
     margin: 0;
     font-family: var(--font-text);
     font-size: var(--fs-meta);
+  }
+
+  @media (max-width: 1024px) {
+    .next-in-tome__heading {
+      font-size: var(--fs-margin-quote);
+    }
+
+    .next-card__body {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .next-card__title {
+      font-size: var(--fs-flap-label);
+    }
+
+    .judge-card {
+      width: 80px;
+      padding: var(--space-8);
+    }
+
+    .judge-card__title {
+      font-size: var(--fs-meta);
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .judge-card__placeholder,
+    .judge-card__caption {
+      display: none;
+    }
   }
 </style>

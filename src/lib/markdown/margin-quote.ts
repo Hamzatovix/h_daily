@@ -14,6 +14,7 @@ export function rehypeMarginQuote() {
       if (!hasQuoteMark(node)) continue;
 
       const index = tree.children.indexOf(node);
+      node.properties.id = 'quote';
       tree.children.splice(index + 1, 0, buildMarginQuote(quote));
       return;
     }
@@ -39,7 +40,7 @@ function buildMarginQuote(quote: string): Element {
       {
         type: 'element',
         tagName: 'blockquote',
-        properties: { id: 'quote', className: ['margin-quote-text'] },
+        properties: { className: ['margin-quote-text'] },
         children: [{ type: 'text', value: quote }],
       },
       {

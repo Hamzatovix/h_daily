@@ -4,11 +4,12 @@
 interface Props {
   variant?: 'short' | 'full';
 }
+import Logo from './Logo.astro';
 const { variant = 'short' } = Astro.props;
 ---
 
 <footer class:list={['site-footer', `site-footer--${variant}`]}>
-  <img class="site-footer__logo" src="/brand/logo-on-black.svg" alt="HAMZATOVIC daily" />
+  <Logo class="site-footer__logo" />
   {
     variant === 'full' ? (
       <div class="site-footer__info">
@@ -37,7 +38,7 @@ const { variant = 'short' } = Astro.props;
     color: var(--paper);
   }
 
-  .site-footer__logo {
+  :global(.site-footer__logo) {
     display: block;
     height: 30px;
     width: auto;
@@ -48,7 +49,7 @@ const { variant = 'short' } = Astro.props;
     padding: var(--space-48);
   }
 
-  .site-footer--full .site-footer__logo {
+  .site-footer--full :global(.site-footer__logo) {
     height: 84px;
   }
 
@@ -77,8 +78,10 @@ const { variant = 'short' } = Astro.props;
       padding: var(--space-32) var(--page-margin-mobile);
     }
 
-    .site-footer--full .site-footer__logo {
-      height: 48px;
+    .site-footer--full :global(.site-footer__logo) {
+      height: 30px;
+      width: 100%;
+      max-width: 320px;
     }
 
     .site-footer__info {

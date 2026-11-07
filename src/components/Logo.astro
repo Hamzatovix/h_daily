@@ -1,0 +1,14 @@
+---
+import horizontal from '../../public/brand/logo-horizontal.svg?raw';
+import small from '../../public/brand/logo-small.svg?raw';
+interface Props { compact?: boolean; class?: string }
+const { compact = false, class: className } = Astro.props;
+const svg = (compact ? small : horizontal)
+  .replaceAll('#000000', 'currentColor')
+  .replaceAll('#1E3FD8', 'var(--tome)');
+---
+<span class:list={['brand-logo', className]} role="img" aria-label="HAMZATOVIC daily" set:html={svg} />
+<style>
+  .brand-logo { line-height: 0; width: max-content; max-width: 100%; }
+  .brand-logo :global(svg) { display: block; height: 100%; width: auto; max-width: 100%; }
+</style>

@@ -8,9 +8,12 @@
 
 @media print {
   .tome-frame,
+  .cover-frame,
   .site-header,
   .flap,
   .next-in-tome,
+  .article-share,
+  .article-end,
   .site-footer {
     display: none !important;
   }

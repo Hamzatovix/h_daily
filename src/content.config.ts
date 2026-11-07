@@ -15,6 +15,7 @@ const tomes = defineCollection({
     coverSvg: z.string().optional(),
     coverAlt: z.string(),
     publishedAt: z.coerce.date().nullable(),
+    nextPublishedAt: z.coerce.date().optional(),
     status: z.enum(['published', 'draft']),
   }),
 });

@@ -1,115 +1,57 @@
 ---
-// Главная = страница текущего тома. docs/pages.md → «Главная тома», design/screens/01-tome-home.jpg
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Header from '../components/Header.astro';
-import TocItem from '../components/TocItem.astro';
-import FeedCard from '../components/FeedCard.astro';
-import JudgeCard from '../components/JudgeCard.astro';
-import Spine from '../components/Spine.astro';
 import Footer from '../components/Footer.astro';
+import Spine from '../components/Spine.astro';
+import ReadingMemory from '../components/ReadingMemory.astro';
 import { slugFromId } from '../lib/content/slug';
 import '../styles/home.css';
-
-const tomes = (await getCollection('tomes', ({ data }) => data.status === 'published')).sort(
-  (a, b) => b.data.number - a.data.number,
-);
+const tomes = (await getCollection('tomes', ({data}) => data.status === 'published')).sort((a,b)=>b.data.number-a.data.number);
 const tome = tomes[0];
-if (!tome) throw new Error('Нет ни одного опубликованного тома в src/content/tomes/');
-
-const articles = (await getCollection('articles', ({ data }) => data.tome === tome.data.number)).sort(
-  (a, b) => a.data.order - b.data.order,
-);
-const firstArticle = articles.find((a) => a.data.status === 'published');
-const coverSrc = tome.data.coverSvg ?? tome.data.cover;
-
-const RUBRICS = [
-  { title: 'Judge me by cover', text: 'Обложки первых изданий: кто нарисовал и почему это работает.' },
-  { title: 'Оскар от HDaily', text: 'Своя премия главреда: фильмы, книги и альбомы года.' },
-  { title: 'Из дневника', text: 'Короткие записи о том, что зацепило.' },
-  { title: 'Разговоры во сне', text: 'Диалоги на границе сна и науки.' },
-];
+if (!tome) throw new Error('Нет опубликованного тома');
+const articles = await getCollection('articles', ({data})=>data.status === 'published' && data.tome === tome.data.number);
+const rubrics = [['Judge me by cover', 'Обложки первых изданий: кто нарисовал и почему это работает.'], ['Оскар от HDaily', 'Своя премия главреда: фильмы, книги и альбомы года.'], ['Из дневника', 'Короткие записи о том, что зацепило.'], ['Разговоры во сне', 'Диалоги на границе сна и науки.']];
 ---
-
-<Base title={tome.data.title} description={tome.data.lede} tome={tome.data.number} image={tome.data.cover}>
+<Base description={tome.data.lede} image={tome.data.cover} coverFrame>
   <Header tomeNumber={tome.data.number} tomeTitle={tome.data.title} />
-  <main>
-    <h1 class="sr-only">Том {tome.data.number}. {tome.data.title}</h1>
-    <section class="home-hero">
-      <div class="home-hero__cover">{coverSrc && <img src={coverSrc} alt={tome.data.coverAlt} width="700" height="933" fetchpriority="high" loading="eager" />}</div>
+  <main class="journal-home">
+    <section class="home-hero journal-cover">
+      <a class="home-hero__cover" href={`/tom/${tome.data.number}/`}><img src={tome.data.coverSvg ?? tome.data.cover} alt={tome.data.coverAlt} width="700" height="933" fetchpriority="high" /></a>
       <div class="home-hero__content">
-        <p class="home-hero__meta">Том {tome.data.number} из шести в этом году</p>
+        <p class="home-hero__meta">Текущий выпуск · Том {tome.data.number}</p>
+        <h1 class="journal-title">HAMZATOVIC daily</h1>
+        <h2 class="journal-tome-title">{tome.data.title}</h2>
         <p class="home-hero__lede">{tome.data.lede}</p>
-        <ol class="home-hero__toc">
-          {articles.map((entry) => <TocItem order={entry.data.order} entry={entry} />)}
-        </ol>
-        {
-          firstArticle && (
-            <a class="home-hero__button" href={`/tom/${tome.data.number}/${slugFromId(firstArticle.id)}/`}>
-              Читать том с начала
-              <span class="home-hero__button-dot" aria-hidden="true" />
-            </a>
-          )
-        }
-        {
-          tome.data.publishedAt && (
-            <p class="home-hero__next-tome">Следующий том выйдет {tome.data.publishedAt.toLocaleDateString('ru-RU')}. Пока его нет, читайте ленту.</p>
-          )
-        }
+        <a class="home-hero__button" href={`/tom/${tome.data.number}/`}>Открыть том <span class="home-hero__button-dot" aria-hidden="true" /></a>
+        {articles.map(entry=><a hidden data-resume-link class="home-resume" href={`/tom/${tome.data.number}/${slugFromId(entry.id)}/#continue`}>Продолжить: {entry.data.title}</a>)}
       </div>
     </section>
-
     <section class="home-section">
-      <h2 class="home-section__heading">В томе</h2>
-      <p class="home-section__lede">четыре текста соавтора и рубрика главреда</p>
-      <div class="home-grid">
-        {
-          articles.map((entry) =>
-            entry.data.status === 'draft' ? (
-              <JudgeCard />
-            ) : (
-              <FeedCard entry={entry} caption={`Материал ${entry.data.order} из ${articles.length}`} />
-            ),
-          )
-        }
-      </div>
+      <div class="journal-section-heading"><h2 class="home-section__heading">Тома</h2><a href="/toma/">Все тома</a></div>
+      <p class="home-section__lede">Каждый выпуск — одна тема.</p>
+      <Spine tomes={tomes} totalPerYear={tomes.length} />
     </section>
-
     <section class="home-section">
-      <h2 class="home-section__heading">Лента</h2>
-      <p class="home-section__lede">то, что выходит между томами</p>
-      <div class="home-grid home-grid--lenta">
-        {Array.from({ length: 4 }).map(() => (
-          <div class="home-feed-placeholder">следующий материал ленты</div>
-        ))}
-      </div>
-    </section>
-
-    <section class="home-section">
-      <div class="home-rubrics">
-        <div class="home-rubrics__intro">
-          <h2 class="home-section__heading">Рубрики главреда</h2>
-          <p>Мансур пишет редко и только в своих рубриках. Каждая открывает подборку всех её выпусков.</p>
-        </div>
-        <ul class="home-rubrics__list">
-          {RUBRICS.map((rubric) => (
-            <li>
-              <p class="home-rubric__title">
-                <span class="home-rubric__dot" aria-hidden="true" />
-                {rubric.title}
-              </p>
-              <p class="home-rubric__text">{rubric.text}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-
-    <section class="home-section">
-      <h2 class="home-section__heading">Полка</h2>
-      <p class="home-section__lede">Архив томов. Каждый том стоит корешком своего цвета, по нажатию открывается целиком.</p>
-      <Spine tomes={tomes} />
+      <h2 class="home-section__heading">Рубрики главреда</h2>
+      <ul class="journal-rubrics">{rubrics.map(([title,text])=><li><p class="home-rubric__title"><span class="home-rubric__dot" aria-hidden="true" />{title}</p><p class="home-rubric__text">{text}</p></li>)}</ul>
     </section>
   </main>
   <Footer variant="full" />
+  <ReadingMemory tome={tome.data.number} />
 </Base>
+<style>
+  .journal-home { padding-bottom: var(--space-96); }
+  .journal-cover { margin-bottom: var(--space-128); }
+  .journal-title { font-family: var(--font-display); font-size: var(--fs-subhead); line-height: var(--lh-subhead); font-weight: 400; overflow-wrap: anywhere; margin: var(--space-24) 0; }
+  .journal-tome-title { font-family: var(--font-text); font-size: var(--fs-subhead); line-height: var(--lh-subhead); margin: 0; }
+  .journal-section-heading { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-24); }
+  .journal-section-heading a { color: var(--ink); font-size: var(--fs-meta); }
+  .journal-rubrics { list-style: none; padding: 0; margin: var(--space-32) 0 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: var(--space-32); }
+  .journal-rubrics li { border-top: var(--hairline) solid var(--ink); padding-top: var(--space-16); }
+  @media(max-width:1024px) {
+    .journal-cover { margin-bottom: var(--space-64); }
+    .journal-title { font-size: var(--fs-flap-label); line-height: var(--lh-flap-label); }
+    .journal-rubrics { grid-template-columns: minmax(0,1fr); }
+  }
+</style>

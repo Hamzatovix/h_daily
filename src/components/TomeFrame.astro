@@ -13,7 +13,8 @@ const { readingTime } = Astro.props;
     <span class="tome-frame__label"></span>
   </div>
   <svg class="tome-frame__mobile" aria-hidden="true">
-    <rect class="tome-frame__mobile-fill" pathLength="100" />
+    <path class="tome-frame__mobile-track" />
+    <path class="tome-frame__mobile-fill" pathLength="100" />
   </svg>
 </div>
 
@@ -34,7 +35,8 @@ const { readingTime } = Astro.props;
     const readingTime = Number(frame.dataset.readingTime) || 0;
     const fill = frame.querySelector<HTMLElement>('.tome-frame__fill');
     const label = frame.querySelector<HTMLElement>('.tome-frame__label');
-    const mobileFill = frame.querySelector<SVGRectElement>('.tome-frame__mobile-fill');
+    const mobileFill = frame.querySelector<SVGPathElement>('.tome-frame__mobile-fill');
+    const mobileTrack = frame.querySelector<SVGPathElement>('.tome-frame__mobile-track');
     const mobileSvg = frame.querySelector<SVGSVGElement>('.tome-frame__mobile');
     frame.classList.add('tome-frame--active');
 
@@ -43,23 +45,29 @@ const { readingTime } = Astro.props;
 
     function sizeMobileFrame() {
       if (!mobileSvg) return;
-      mobileSvg.setAttribute('viewBox', `0 0 ${window.innerWidth} ${window.innerHeight}`);
+      const { width, height } = mobileSvg.getBoundingClientRect();
+      if (!width || !height) return;
+      mobileSvg.setAttribute('viewBox', `0 0 ${width} ${height}`);
       const half = parseFloat(getComputedStyle(frame!).getPropertyValue('--frame-mobile')) / 2 || 4;
-      mobileFill?.setAttribute('x', String(half));
-      mobileFill?.setAttribute('y', String(half));
-      mobileFill?.setAttribute('width', String(window.innerWidth - half * 2));
-      mobileFill?.setAttribute('height', String(window.innerHeight - half * 2));
+      const radius = Math.min(12, width / 8, height / 8);
+      const right = width - half;
+      const bottom = height - half;
+      const path = `M ${half + radius} ${half} H ${right - radius} Q ${right} ${half} ${right} ${half + radius} V ${bottom - radius} Q ${right} ${bottom} ${right - radius} ${bottom} H ${half + radius} Q ${half} ${bottom} ${half} ${bottom - radius} V ${half + radius} Q ${half} ${half} ${half + radius} ${half} Z`;
+      mobileFill?.setAttribute('d', path);
+      mobileTrack?.setAttribute('d', path);
     }
 
     function update() {
       const top = first.getBoundingClientRect().top + window.scrollY;
       const bottom = last.getBoundingClientRect().bottom + window.scrollY;
-      const articleHeight = Math.max(bottom - top, 1);
-      const scrolled = window.scrollY + window.innerHeight - top;
-      const progress = Math.min(Math.max(scrolled / articleHeight, 0), 1);
+      const viewportHeight = document.documentElement.clientHeight;
+      const start = Math.max(0, top - viewportHeight * 0.3);
+      const end = Math.max(start + 1, bottom - viewportHeight + 32);
+      const rawProgress = Math.min(Math.max((window.scrollY - start) / (end - start), 0), 1);
+      const progress = rawProgress >= 0.999 ? 1 : rawProgress;
 
       if (fill) fill.style.width = `${progress * 100}%`;
-      if (mobileFill) mobileFill.style.strokeDasharray = `${progress * 100} 100`;
+      if (mobileFill) mobileFill.style.strokeDashoffset = String(100 * (1 - progress));
 
       if (label) {
         if (progress >= 0.999 || readingTime <= 0) {
@@ -67,7 +75,8 @@ const { readingTime } = Astro.props;
         } else {
           const minutesLeft = Math.ceil(readingTime * (1 - progress));
           label.textContent = `ещё ${minutesLeft} ${pluralizeRu(minutesLeft, ['минута', 'минуты', 'минут'])}`;
-          label.style.left = `${progress * 100}%`;
+          const available = frame!.getBoundingClientRect().width;
+          label.style.left = `${Math.max(8, Math.min(progress * available + 8, available - label.offsetWidth - 8))}px`;
         }
       }
     }
@@ -89,6 +98,11 @@ const { readingTime } = Astro.props;
       sizeMobileFrame();
       update();
     });
+    const article = document.querySelector('.article-grid');
+    if (article) new ResizeObserver(onScroll).observe(article);
+    if (mobileSvg) new ResizeObserver(() => { sizeMobileFrame(); onScroll(); }).observe(mobileSvg);
+    window.visualViewport?.addEventListener('resize', onScroll);
+    document.fonts.ready.then(onScroll);
   }
 </script>
 
@@ -135,7 +149,9 @@ const { readingTime } = Astro.props;
   .tome-frame__label {
     position: absolute;
     top: 0;
-    transform: translate(var(--space-8), -2px);
+    line-height: var(--frame-desktop);
+    padding: 0 var(--space-4);
+    background: var(--tome);
     white-space: nowrap;
     font-family: var(--font-text);
     font-style: italic;
@@ -149,7 +165,7 @@ const { readingTime } = Astro.props;
     }
 
     .tome-frame--active {
-      border-color: transparent;
+      border: 0;
     }
 
     .tome-frame--active .tome-frame__top {
@@ -164,16 +180,27 @@ const { readingTime } = Astro.props;
       height: 100%;
     }
 
+    .tome-frame__mobile-track,
     .tome-frame__mobile-fill {
       fill: none;
-      stroke: var(--tome);
       stroke-width: var(--frame-mobile);
-      stroke-dasharray: 0 100;
+      stroke-linejoin: miter;
+      stroke-linecap: butt;
+    }
+
+    .tome-frame__mobile-track {
+      stroke: var(--rule);
+    }
+
+    .tome-frame__mobile-fill {
+      stroke: var(--tome);
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
     }
 
     @media (prefers-reduced-motion: no-preference) {
       .tome-frame__mobile-fill {
-        transition: stroke-dasharray 120ms linear;
+        transition: stroke-dashoffset 80ms linear;
       }
     }
   }

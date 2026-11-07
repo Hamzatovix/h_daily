@@ -1,0 +1,11 @@
+---
+import { getCollection } from 'astro:content';
+import TomeHome from '../../../components/TomePage.astro';
+
+export async function getStaticPaths() {
+  const tomes = await getCollection('tomes', ({ data }) => data.status === 'published');
+  return tomes.map((tome) => ({ params: { tome: String(tome.data.number) }, props: { tome } }));
+}
+---
+
+<TomeHome tome={Astro.props.tome} />

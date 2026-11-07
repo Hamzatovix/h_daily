@@ -8,6 +8,7 @@ import ArticleHero from '../../../components/ArticleHero.astro';
 import Flap from '../../../components/Flap.astro';
 import NextInTome, { type NextCard } from '../../../components/NextInTome.astro';
 import Footer from '../../../components/Footer.astro';
+import ReadingMemory from '../../../components/ReadingMemory.astro';
 import { slugFromId } from '../../../lib/content/slug';
 import { AUTHORS } from '../../../lib/content/authors';
 import { readingTimeLabel } from '../../../lib/format/pluralize';
@@ -96,8 +97,14 @@ for (let i = 0; i < 2; i++) {
       <Flap flap={entry.data.flap} author={entry.data.author} />
       <Content />
     </div>
+    <div class="article-end">
+      <span>{AUTHORS[entry.data.author].name}</span>
+      <a class="article-share" href="#quote">Поделиться цитатой</a>
+      <a href={`/tom/${tome.data.number}/`}>К оглавлению тома</a>
+    </div>
     <p class="print-only">{new URL(Astro.url.pathname, Astro.site)}</p>
   </main>
   <NextInTome cards={cards} />
   <Footer />
+  <ReadingMemory tome={tome.data.number} article />
 </Base>

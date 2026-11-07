@@ -2,7 +2,7 @@
 // docs/components.md, design/brandbook/README.md → ThemeToggle
 ---
 
-<button type="button" class="theme-toggle" aria-label="Ночной режим" aria-pressed="false"></button>
+<button type="button" class="theme-toggle" aria-label="Ночной режим" aria-pressed="false"><span aria-hidden="true"></span></button>
 
 <script>
   const STORAGE_KEY = 'theme';
@@ -35,17 +35,26 @@
 <style>
   .theme-toggle {
     position: relative;
-    width: 20px;
-    height: 20px;
+    width: 44px;
+    height: 44px;
     padding: 0;
     overflow: hidden;
-    border: var(--hairline) solid var(--ink);
-    border-radius: var(--radius-dot);
-    background: var(--paper);
+    border: 0;
+    background: transparent;
     cursor: pointer;
   }
 
-  .theme-toggle::after {
+  .theme-toggle span {
+    display: block;
+    position: absolute;
+    inset: 12px;
+    border: var(--hairline) solid var(--ink);
+    border-radius: var(--radius-dot);
+    overflow: hidden;
+    background: var(--paper);
+  }
+
+  .theme-toggle span::after {
     content: '';
     position: absolute;
     inset: 0;
